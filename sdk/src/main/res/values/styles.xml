@@ -1,0 +1,47 @@
+<resources>
+
+    <!-- Base theme. -->
+    <style name="PopdeemSDKTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="PopdeemSDKTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="PopdeemSDKTheme.DarkerWindowBackgroundTheme" parent="PopdeemSDKTheme.NoActionBar">
+        <item name="android:windowBackground">@color/pd_claim_background_color</item>
+    </style>
+
+    <style name="PopdeemSDKTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/pd_toolbar_text_color</item>
+    </style>
+
+    <style name="PopdeemSDKTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="PopdeemSDKTheme.TabLayoutTheme" parent="Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/PopdeemSDKTheme.TabLayoutText</item>
+        <item name="tabSelectedTextColor">@color/pd_tab_selected_text_color</item>
+    </style>
+
+    <style name="PopdeemSDKTheme.TabLayoutText" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/pd_tab_unselected_text_color</item>
+    </style>
+
+    <style name="PopdeemSDKTheme.ClaimSwitchStyle">
+        <item name="colorControlActivated">@color/pd_claim_switch_tint_color</item>
+    </style>
+
+    <style name="FullScreenDialogStyle" parent="@android:style/Theme.Dialog">
+        <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_up_dialog</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_down</item>
+    </style>
+</resources>

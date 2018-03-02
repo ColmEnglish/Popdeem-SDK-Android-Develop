@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.popdeem.sdk">
+
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:supportsRtl="true">
+        <activity
+            android:name=".uikit.activity.PDUIHomeFlowActivity"
+            android:label="@string/pd_empty_string"
+            android:screenOrientation="portrait"
+            android:theme="@style/PopdeemSDKTheme.NoActionBar" />
+        <activity
+            android:name=".uikit.activity.PDUIFeedImageActivity"
+            android:label="@string/pd_empty_string"
+            android:screenOrientation="portrait"
+            android:theme="@style/PopdeemSDKTheme.NoActionBar" />
+        <activity
+            android:name=".uikit.activity.PDUIInboxActivity"
+            android:label="@string/pd_empty_string"
+            android:screenOrientation="portrait"
+            android:theme="@style/PopdeemSDKTheme.NoActionBar" />
+        <activity
+            android:name=".uikit.activity.PDUIClaimActivity"
+            android:label="@string/pd_empty_string"
+            android:screenOrientation="portrait"
+            android:theme="@style/PopdeemSDKTheme.DarkerWindowBackgroundTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".uikit.activity.PDUIRedeemActivity"
+            android:label="@string/pd_empty_string"
+            android:screenOrientation="portrait"
+            android:theme="@style/PopdeemSDKTheme.DarkerWindowBackgroundTheme" />
+        <activity
+            android:name="com.soundcloud.android.crop.CropImageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".uikit.activity.PDUISettingsActivity"
+            android:label="@string/pd_empty_string"
+            android:screenOrientation="portrait"
+            android:theme="@style/PopdeemSDKTheme.DarkerWindowBackgroundTheme" />
+
+        <activity android:name=".uikit.activity.PDUISelectNetworkActivity"
+            android:label="@string/pd_empty_string"
+            android:screenOrientation="portrait"
+            android:theme="@style/PopdeemSDKTheme.DarkerWindowBackgroundTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+
+        <activity android:name=".uikit.activity.PDUIScanActivity"
+            android:label="@string/pd_empty_string"
+            android:screenOrientation="portrait"
+            android:theme="@style/PopdeemSDKTheme.DarkerWindowBackgroundTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="45fed7d3502f01cf3bf0a4d210b335db6bc2848f" />
+
+        <receiver
+            android:name=".core.gcm.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".core.gcm.GCMIntentService" />
+        <provider
+            android:name=".CustomFileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+    </application>
+
+</manifest>

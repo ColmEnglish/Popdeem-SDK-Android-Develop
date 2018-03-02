@@ -1,0 +1,96 @@
+apply plugin: 'com.android.library'
+apply plugin: 'io.fabric'
+apply plugin: 'realm-android'
+
+project.ext.popdeemSdkVersion = '1.2.10'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 25
+        versionCode 1
+        versionName popdeemSdkVersion
+        consumerProguardFiles 'consumer-proguard-rules.pro'
+    }
+    buildTypes {
+//        release {
+//            minifyEnabled false
+//            consumerProguardFiles 'consumer-proguard-rules.pro'
+//        }
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    // Tests
+    testCompile 'junit:junit:4.12'
+    testCompile 'com.squareup.okhttp3:mockwebserver:3.1.2'
+    // Google
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:design:25.1.1'
+    compile 'com.android.support:cardview-v7:25.1.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.google.code.gson:gson:2.7'
+    // Play Services
+    compile 'com.google.android.gms:play-services-gcm:10.2.1'
+    compile 'com.google.android.gms:play-services-location:10.2.1'
+    // Facebook
+    compile 'com.facebook.android:facebook-android-sdk:4.5.0'
+    // Twitter
+    compile('com.twitter.sdk.android:twitter:2.0.0@aar') {
+        transitive = true
+    }
+    // Third Party
+    compile 'joda-time:joda-time:2.9.4'
+    compile 'com.soundcloud.android:android-crop:1.0.1@aar'
+    compile 'com.wang.avi:library:2.1.3'
+    compile 'com.github.justzak:dilatingdotsprogressbar:1.0.1'
+
+
+    // Square
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.jakewharton.retrofit:retrofit1-okhttp3-client:1.1.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+}
+
+ext {
+    propertiesFileName = 'sdkdistro.properties'
+    bintrayRepo = 'maven'
+    bintrayName = 'popdeem-sdk'
+    bintrayOrg = 'popdeem'
+
+    publishedGroupId = 'com.popdeem.sdk'
+    libraryName = 'PopdeemSDK'
+    artifact = 'sdk'
+
+    libraryDescription = 'PopdeemSDK is used to interact with the Popdeem API.'
+    libraryVersion = popdeemSdkVersion
+
+    siteUrl = 'http://popdeem.com/'
+    gitUrl = 'https://github.com/Popdeem/Popdeem-SDK-Android'
+
+    developerId = 'mobamike'
+    developerName = 'Mike Nolan'
+    developerEmail = 'mike@mobanode.com'
+
+    licenseName = 'The MIT License'
+    licenseUrl = 'https://raw.githubusercontent.com/Popdeem/Popdeem-SDK-Android/master/LICENSE.txt'
+    allLicenses = ["MIT"]
+}
+
+if(project.rootProject.file(propertiesFileName).exists()) {
+    println("Popdeem SDK Properties file found.")
+    apply from: 'https://raw.githubusercontent.com/mike-nolan/JCenter/master/install.gradle'
+    apply from: 'https://raw.githubusercontent.com/mike-nolan/JCenter/master/bintray.gradle'
+}
+else {
+    println("Popdeem SDK Properties file is missing. Ignore this is you are not pushing a release of the SDK.")
+}
