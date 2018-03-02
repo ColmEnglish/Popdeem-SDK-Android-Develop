@@ -114,6 +114,7 @@ public class PDUIWalletFragment extends Fragment {
             mView = inflater.inflate(R.layout.fragment_pd_wallet, container, false);
 
             mNoItemsInWalletView = mView.findViewById(R.id.pd_wallet_no_items_view);
+            mNoItemsInWalletView.setVisibility(View.GONE);
             mSwipeRefreshLayout = (PDUISwipeRefreshLayout) mView;
             mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
@@ -304,7 +305,7 @@ public class PDUIWalletFragment extends Fragment {
             mRewards.clear();
             mAdapter.notifyDataSetChanged();
             mSwipeRefreshLayout.setRefreshing(false);
-            mNoItemsInWalletView.setVisibility(mRewards.size() == 0 ? View.VISIBLE : View.GONE);
+//            mNoItemsInWalletView.setVisibility(mRewards.size() == 0 ? View.VISIBLE : View.GONE);
             mSwipeRefreshLayout.post(new Runnable() {
                 @Override
                 public void run() {
@@ -402,7 +403,7 @@ public class PDUIWalletFragment extends Fragment {
                     if(finishedMessages&&finishedWallet) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-                    mNoItemsInWalletView.setVisibility(mRewards.size() == 0 ? View.VISIBLE : View.GONE);
+//                    mNoItemsInWalletView.setVisibility(mRewards.size() == 0 ? View.VISIBLE : View.GONE);
 
 //                    if (verifyingRewardIndex != -1) {
 //                        verifyReward(verifyingRewardIndex);
