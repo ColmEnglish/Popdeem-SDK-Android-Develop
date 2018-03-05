@@ -43,7 +43,8 @@ public class PDRealmUtils {
     private static final int REALM_SCHEMA_VERSION = 9;
 
     public static void initRealmDB(Context context) {
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(context)
+        Realm.init(context);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
                 .name("popdeemrealm.realm")
                 .modules(new PDRealmModule())
                 .schemaVersion(REALM_SCHEMA_VERSION)
