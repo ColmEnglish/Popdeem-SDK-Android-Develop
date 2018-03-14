@@ -40,6 +40,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.JsonObject;
+import com.popdeem.sdk.BuildConfig;
 import com.popdeem.sdk.R;
 import com.popdeem.sdk.core.model.PDEvent;
 import com.popdeem.sdk.core.model.PDReward;
@@ -479,6 +480,7 @@ public class PDUIWalletRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         LinearLayout messagesLinearLayout;
         TextView messagesTextView;
         TextView messagesBadgeTextView;
+        TextView versionTextView;
         LinearLayout noHistory;
 
 
@@ -516,6 +518,8 @@ public class PDUIWalletRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
             profileName = (TextView)itemView.findViewById(R.id.pd_feed_user_name_text_view);
             ambassadorView = (PDAmbassadorView)itemView.findViewById(R.id.pd_profile_ambassador_view);
             noHistory =(LinearLayout)itemView.findViewById(R.id.pd_wallet_no_items_view);
+            versionTextView =(TextView) itemView.findViewById(R.id.version_text);
+            versionTextView.setText("V"+BuildConfig.VERSION_NAME);
 
         }
     }

@@ -125,6 +125,19 @@
         android:textAllCaps="true"
         android:textSize="@dimen/social_login_body_text_size" />
 
+    <TextView
+        android:id="@+id/version_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="false"
+        android:paddingLeft="24dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:text="V"
+        android:textAllCaps="true"
+        android:textSize="8dp" />
+
     <LinearLayout
         android:id="@+id/pd_wallet_no_items_view"
         android:layout_width="match_parent"
