@@ -114,7 +114,7 @@ public class PDUIFeedFragment extends Fragment {
     }
 
     private void refreshFeed() {
-        deleteDirectoryTree(getActivity());
+//        deleteDirectoryTree(getActivity());
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
