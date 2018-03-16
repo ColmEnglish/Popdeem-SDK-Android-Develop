@@ -137,7 +137,7 @@ public interface PopdeemAPI {
             Callback<PDUser> callback);
 
     @GET(PDAPIConfig.PD_USERS_PATH + "/{id}")
-    void getUserDetailsForId(@Path("id") String id, Callback<JsonObject> callback);
+    void getUserDetailsForId(@Path("id") String id, PDAPICallback<JsonObject> callback);
 
     @GET(PDAPIConfig.PD_USERS_PATH + "/{id}/friends")
     void getPopdeemFriends(@Path("id") String id, Callback<JsonObject> callback);

@@ -22,16 +22,16 @@
  * SOFTWARE.
  */
 
-package com.popdeem.sdk.core.model;
+package com.popdeem.sdk.core.realm;
 
-import com.popdeem.sdk.core.realm.PDRealmRewardClaimingSocialNetwork;
+import com.popdeem.sdk.core.model.PDRewardClaimingSocialNetwork;
 
 import io.realm.RealmObject;
 
 /**
  * Created by mikenolan on 10/08/16.
  */
-public class PDRewardClaimingSocialNetwork {
+public class PDRealmRewardClaimingSocialNetwork extends RealmObject {
 
     /*
         "name": "Instagram",
@@ -45,17 +45,17 @@ public class PDRewardClaimingSocialNetwork {
     private String createdAt;
     private String updatedAt;
 
-    public PDRewardClaimingSocialNetwork() {
+    public PDRealmRewardClaimingSocialNetwork() {
     }
 
-    public PDRewardClaimingSocialNetwork(String name, long socialAccountId, String createdAt, String updatedAt) {
+    public PDRealmRewardClaimingSocialNetwork(String name, long socialAccountId, String createdAt, String updatedAt) {
         this.name = name;
         this.socialAccountId = socialAccountId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    public PDRewardClaimingSocialNetwork(PDRealmRewardClaimingSocialNetwork reward) {
+    public PDRealmRewardClaimingSocialNetwork(PDRewardClaimingSocialNetwork reward) {
         this.name = reward.getName();
         this.socialAccountId = reward.getSocialAccountId();
         this.createdAt = reward.getCreatedAt();

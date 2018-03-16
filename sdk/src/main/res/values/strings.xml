@@ -128,14 +128,14 @@
     <string name="pd_wallet_credit_reward_text">was added to your account on</string>
     <string name="pd_wallet_recurs_monthly">Draw takes place monthly.</string>
     <string name="pd_wallet_recurs_day">Draw takes place on</string>
-    <string name="pd_wallet_coupon_info_message_text">- Once you\'re ready to redeem your reward, tap \"Redeem\".\n\n- After tapping \"Redeem\" you have %1$s minutes to get the reward.\n\n- You must show the cashier the following screen within %2$s minutes.</string>
+    <string name="pd_wallet_coupon_info_message_text">You will be presented with a countdown timer you must show the merchant.</string>
     <string name="pd_redeem_sweepstake_reward_info_title_string">Sweepstake Reward</string>
     <string name="pd_redeem_sweepstake_reward_info_message_string">- You are now in the draw.\n\n- You will be notified if you are the winner.</string>
     <string name="pd_redeem_sweepstake_reward_no_date_message_string">\n\n- There is no date set for this draw.</string>
     <string name="pd_draw_takes_place_in_string">Draw takes place in</string>
     <string name="pd_wallet_verify_button_text">Verify</string>
-    <string name="pd_wallet_reward_must_be_verified_text">Press verify to claim your reward.</string>
-    <string name="pd_wallet_sweepstake_must_be_verified_text">Press verify to enter into the competition.</string>
+    <string name="pd_wallet_reward_must_be_verified_text">This reward must be verified.</string>
+    <string name="pd_wallet_sweepstake_must_be_verified_text">This reward must be verified.</string>
     <string name="pd_wallet_redeem_text">Redeem at the point of sale.</string>
     <string name="pd_wallet_sweepstakes_text">You have been entered into the draw.</string>
 
@@ -152,7 +152,7 @@
 
     <string name="pd_are_you_sure_string">Are you sure?</string>
     <string name="pd_redeem_button_string">Redeem</string>
-    <string name="pd_redeem_reward_info_title_string">How to Redeem</string>
+    <string name="pd_redeem_reward_info_title_string">Redeem Reward Now?</string>
 
     <string name="pd_redeem_info_text">Share this screen at the location\nbefore the timer runs out</string>
     <string name="pd_redeem_done_text">Done</string>
@@ -201,7 +201,9 @@
     <string name="pd_connect_twitter_title">Twitter</string>
     <string name="pd_connect_instagram_title">Instagram</string>
     <string name="pd_connect_dialog_message_text">You must connect your %1s account to claim this reward</string>
+    <string name="pd_connect_dialog_message_text_settings">Connect your %1s account to claim %1s rewards</string>
     <string name="pd_connect_dialog_button_text">Connect %1s Account</string>
+    <string name="pd_connect_dialog_button_text_settings">Continue</string>
 
 
     <!-- Misc Strings -->

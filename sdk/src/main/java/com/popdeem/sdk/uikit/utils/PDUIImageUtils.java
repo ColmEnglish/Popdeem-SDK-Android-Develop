@@ -32,6 +32,7 @@ import android.media.ExifInterface;
 import android.os.Environment;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
 import com.popdeem.sdk.core.utils.PDLog;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -166,14 +167,23 @@ public class PDUIImageUtils {
         return bitmap;
     }
 
-    public static boolean deleteDirectoryTree(Context mContext) {
+    public static boolean deleteDirectoryTree(final Context mContext) {
 
-        PicassoTools.clearCache(Picasso.with(mContext));
+//        PicassoTools.clearCache(Picasso.with(mContext));
 
-        File cache = new File(mContext.getApplicationContext().getCacheDir(), "picasso-cache");
-        if (cache.exists() && cache.isDirectory()) {
-            return deleteDir(cache);
-        }
+
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                Glide.get(mContext).clearDiskCache();
+            }
+        });
+        thread.start();
+
+//        File cache = new File(mContext.getApplicationContext().getCacheDir(), "picasso-cache");
+//        if (cache.exists() && cache.isDirectory()) {
+//            return deleteDir(cache);
+//        }
 
         return false;
     }

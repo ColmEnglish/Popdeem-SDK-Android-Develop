@@ -25,6 +25,7 @@
 package com.popdeem.sdk.uikit.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.popdeem.sdk.R;
 import com.popdeem.sdk.core.model.PDReward;
 import com.popdeem.sdk.core.utils.PDNumberUtils;
@@ -103,8 +105,8 @@ public class PDUIRewardsRecyclerViewAdapter extends RecyclerView.Adapter<PDUIRew
 //        } else {
 //            actionStringBuilder.append(holder.context.getString(R.string.pd_claim_action_none));
 //        }
-        if(reward.getSocialMediaTypes().length > 0) {
-            if (reward.getSocialMediaTypes().length > 1) { // both networks
+        if(reward.getSocialMediaTypes().size() > 0) {
+            if (reward.getSocialMediaTypes().size() > 1) { // both networks
                 if (reward.getAction().equalsIgnoreCase(PD_REWARD_ACTION_CHECKIN)) {
                     actionStringBuilder.append(holder.context.getString(R.string.pd_claim_action_tweet_checkin));
                 } else if (reward.getAction().equalsIgnoreCase(PD_REWARD_ACTION_PHOTO)) {
@@ -116,7 +118,7 @@ public class PDUIRewardsRecyclerViewAdapter extends RecyclerView.Adapter<PDUIRew
                 } else {
                     actionStringBuilder.append(holder.context.getString(R.string.pd_claim_action_none));
                 }
-            } else if (reward.getSocialMediaTypes()[0].equalsIgnoreCase("Facebook")) {
+            } else if (reward.getSocialMediaTypes().get(0).equalsIgnoreCase("Facebook")) {
                 if (reward.getAction().equalsIgnoreCase(PD_REWARD_ACTION_CHECKIN)) {
                     actionStringBuilder.append(holder.context.getString(R.string.pd_claim_action_checkin));
                 } else if (reward.getAction().equalsIgnoreCase(PD_REWARD_ACTION_PHOTO)) {
@@ -128,7 +130,7 @@ public class PDUIRewardsRecyclerViewAdapter extends RecyclerView.Adapter<PDUIRew
                 } else {
                     actionStringBuilder.append(holder.context.getString(R.string.pd_claim_action_none));
                 }
-            } else if (reward.getSocialMediaTypes()[0].equalsIgnoreCase("Twitter")) {
+            } else if (reward.getSocialMediaTypes().get(0).equalsIgnoreCase("Twitter")) {
                 if (reward.getAction().equalsIgnoreCase(PD_REWARD_ACTION_CHECKIN)) {
                     actionStringBuilder.append(holder.context.getString(R.string.pd_claim_action_tweet));
                 } else if (reward.getAction().equalsIgnoreCase(PD_REWARD_ACTION_PHOTO)) {
@@ -140,7 +142,7 @@ public class PDUIRewardsRecyclerViewAdapter extends RecyclerView.Adapter<PDUIRew
                 } else {
                     actionStringBuilder.append(holder.context.getString(R.string.pd_claim_action_none));
                 }
-            } else if (reward.getSocialMediaTypes()[0].equalsIgnoreCase("Instagram")) {
+            } else if (reward.getSocialMediaTypes().get(0).equalsIgnoreCase("Instagram")) {
                 actionStringBuilder.append(holder.context.getString(R.string.pd_claim_action_photo_camera));
             }
         }else{
@@ -158,7 +160,17 @@ public class PDUIRewardsRecyclerViewAdapter extends RecyclerView.Adapter<PDUIRew
         }
 
         holder.actionTextView.setText(actionStringBuilder.toString());
-        holder.timeTextView.setText(getTimeSting(reward.getAvailableUntilInSeconds()));
+        if(!reward.isUnlimitedAvailability()) {
+            if(shouldShowTime(reward.getAvailableUntilInSeconds())){
+                String text = getTimeSting(reward.getAvailableUntilInSeconds());
+                holder.timeTextView.setText(text);
+                holder.timeTextView.setVisibility(View.VISIBLE);
+            }else{
+                holder.timeTextView.setVisibility(View.GONE);
+            }
+        }else{
+            holder.timeTextView.setVisibility(View.GONE);
+        }
 
 
 //        if (reward.getDisableLocationVerification().equalsIgnoreCase(PDReward.PD_FALSE) && reward.getDistanceFromUser() > 0) {
@@ -168,7 +180,7 @@ public class PDUIRewardsRecyclerViewAdapter extends RecyclerView.Adapter<PDUIRew
 
         String imageUrl = reward.getCoverImage();
         if (imageUrl == null || imageUrl.isEmpty() || imageUrl.contains("default")) {
-            Picasso.with(holder.context)
+            Glide.with(holder.context)
                     .load(R.drawable.pd_ui_star_icon)
                     .error(R.drawable.pd_ui_star_icon)
                     .placeholder(R.drawable.pd_ui_star_icon)
@@ -176,11 +188,11 @@ public class PDUIRewardsRecyclerViewAdapter extends RecyclerView.Adapter<PDUIRew
         } else {
 
 
-            Picasso.with(holder.context)
+            Glide.with(holder.context)
                     .load(imageUrl)
 
                     .error(R.drawable.pd_ui_star_icon)
-                    .resizeDimen(R.dimen.pd_reward_item_image_dimen, R.dimen.pd_reward_item_image_dimen)
+//                    .override(R.dimen.pd_reward_item_image_dimen, R.dimen.pd_reward_item_image_dimen)
                     .placeholder(R.drawable.pd_ui_star_icon)
                     .into(holder.imageView);
         }
@@ -241,18 +253,28 @@ public class PDUIRewardsRecyclerViewAdapter extends RecyclerView.Adapter<PDUIRew
         holder.imageViewsSocial[1].setVisibility(View.GONE);
         holder.imageViewsSocial[2].setVisibility(View.GONE);
 
-        for (int i = 0; i < reward.getSocialMediaTypes().length; i++) {
-            if (reward.getSocialMediaTypes()[i].equalsIgnoreCase(PD_SOCIAL_MEDIA_TYPE_FACEBOOK)){ //Facebook
+        for (int i = 0; i < reward.getSocialMediaTypes().size(); i++) {
+            if (reward.getSocialMediaTypes().get(i).equalsIgnoreCase(PD_SOCIAL_MEDIA_TYPE_FACEBOOK)){ //Facebook
                 holder.imageViewsSocial[i].setImageResource(R.drawable.pduirewardfacebookicon);
                 holder.imageViewsSocial[i].setVisibility(View.VISIBLE);
-            }else if (reward.getSocialMediaTypes()[i].equalsIgnoreCase(PD_SOCIAL_MEDIA_TYPE_INSTAGRAM)){ //Instagram
+            }else if (reward.getSocialMediaTypes().get(i).equalsIgnoreCase(PD_SOCIAL_MEDIA_TYPE_INSTAGRAM)){ //Instagram
                 holder.imageViewsSocial[i].setImageResource(R.drawable.pduirewardinstagramicon);
                 holder.imageViewsSocial[i].setVisibility(View.VISIBLE);
-            }else if (reward.getSocialMediaTypes()[i].equalsIgnoreCase(PD_SOCIAL_MEDIA_TYPE_TWITTER)){ //Twitter
+            }else if (reward.getSocialMediaTypes().get(i).equalsIgnoreCase(PD_SOCIAL_MEDIA_TYPE_TWITTER)){ //Twitter
                 holder.imageViewsSocial[i].setImageResource(R.drawable.pduirewardtwittericon);
                 holder.imageViewsSocial[i].setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    public boolean shouldShowTime(String time){
+        long interval = PDNumberUtils.toLong(time, -1) - (Calendar.getInstance().getTimeInMillis()/1000);
+        long intervalDays = ((interval/60)/60)/24;
+
+        if(intervalDays > 6){
+            return false;
+        }
+        return true;
     }
 
     public String getTimeSting(String time){
@@ -268,7 +290,7 @@ public class PDUIRewardsRecyclerViewAdapter extends RecyclerView.Adapter<PDUIRew
         long intervalWeeks = (((interval/60)/60)/24)/7;
         long intervalMonths = (((interval/60)/60)/24)/28;
 
-        if(intervalMonths >=1 || intervalWeeks > 3){
+        if(intervalDays > 6){
             return ret;
         }
 
@@ -276,16 +298,16 @@ public class PDUIRewardsRecyclerViewAdapter extends RecyclerView.Adapter<PDUIRew
         // Note: watch icon is invisible in editor
         if (intervalMonths > 0) {
             if (intervalMonths > 1) {
-                ret = ret + "⌚︎" + intervalMonths + " months left to claim";
+                ret = ret + "⌚︎ " + intervalMonths + " months left to claim";
             } else {
-                ret = ret + "⌚︎" + intervalMonths + " month left to claim";
+                ret = ret + "⌚︎ " + intervalMonths + " month left to claim";
             }
         } else if (intervalDays > 6) {
-            ret = ret + "⌚︎" + intervalWeeks + " weeks left to claim";
+            ret = ret + "⌚︎ " + intervalWeeks + " weeks left to claim";
         } else if (intervalDays < 7 && intervalHours > 23) {
-            ret = ret + "⌚︎" + intervalDays + " days left to claim";
+            ret = ret + "⌚︎ " + intervalDays + " days left to claim";
         } else {
-            ret = ret + "⌚︎" + intervalHours + " hours left to claim";
+            ret = ret + "⌚︎ " + intervalHours + " hours left to claim";
         }
 
 

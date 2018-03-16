@@ -33,6 +33,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -63,6 +64,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -468,16 +470,16 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
         final ImageView logoImageView = (ImageView) findViewById(R.id.pd_reward_star_image_view);
         final String imageUrl = mReward.getCoverImage();
         if (imageUrl == null || imageUrl.isEmpty() || imageUrl.contains("default")) {
-            Picasso.with(this)
+            Glide.with(this)
                     .load(R.drawable.pd_ui_star_icon)
                     .error(R.drawable.pd_ui_star_icon)
                     .placeholder(R.drawable.pd_ui_star_icon)
                     .into(logoImageView);
         } else {
-            Picasso.with(this)
+            Glide.with(this)
                     .load(imageUrl)
                     .error(R.drawable.pd_ui_star_icon)
-                    .resizeDimen(R.dimen.pd_reward_item_image_dimen, R.dimen.pd_reward_item_image_dimen)
+//                    .override(R.dimen.pd_reward_item_image_dimen, R.dimen.pd_reward_item_image_dimen)
                     .placeholder(R.drawable.pd_ui_star_icon)
                     .into(logoImageView);
         }
@@ -528,17 +530,17 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
     }
 
     private boolean twitterShareForced() {
-        List<String> mediaTypes = Arrays.asList(mReward.getSocialMediaTypes());
+        List<String> mediaTypes = mReward.getSocialMediaTypes();
         return mediaTypes.size() == 1 && mediaTypes.contains(PDReward.PD_SOCIAL_MEDIA_TYPE_TWITTER);
     }
 
     private boolean isNetworkAvailableForShare(@PDReward.PDSocialMediaType String network) {
-        List<String> mediaTypes = Arrays.asList(mReward.getSocialMediaTypes());
+        List<String> mediaTypes = mReward.getSocialMediaTypes();
         return mediaTypes.contains(network);
     }
 
     private String readableMediaTypedAvailable() {
-        List<String> mediaTypes = Arrays.asList(mReward.getSocialMediaTypes());
+        List<String> mediaTypes = mReward.getSocialMediaTypes();
         StringBuilder builder = new StringBuilder("");
         for (int i = 0, size = mediaTypes.size(); i < size; i++) {
             if (i > 0) {
@@ -803,10 +805,26 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
 
                     @Override
                     public void failure(int statusCode, Exception e) {
-                        progressBar.setVisibility(View.GONE);
-                        shareButton.setEnabled(true);
-                        shareButton.animate().alpha(1.0f);
-                        showBasicOKAlertDialog(R.string.pd_common_sorry_text, R.string.pd_common_something_wrong_text);
+
+                        if (fromInstagram) {
+                            finishActivityAfterClaim();
+                        }
+                        Handler mainHandler = new Handler(Looper.getMainLooper());
+
+                        Runnable myRunnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(View.GONE);
+                                shareButton.setEnabled(true);
+                                shareButton.animate().alpha(1.0f);
+                                if(!fromInstagram){
+                                    showBasicOKAlertDialog(R.string.pd_common_sorry_text, R.string.pd_common_something_wrong_text);
+                                }
+                            }
+                        };
+                        mainHandler.post(myRunnable);
+
+
                     }
                 });
 
@@ -882,6 +900,8 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
                 PDRealmUserDetails userDetails = realm.where(PDRealmUserDetails.class).findFirst();
                 realm.close();
                 showInstagramFailure(userDetails, null);
+                dotProgress.hide(150);
+
 
             }
         });
@@ -937,12 +957,12 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
                 }else{
                     pdClaimUserHashtagTextView.setVisibility(View.GONE);
                 }
-                Picasso.with(PDUIClaimActivity.this)
+                Glide.with(PDUIClaimActivity.this)
                         .load(postScan.getMediaUrl())
                         .into(pdVerifyImage);
 
                 if(postScan!=null && postScan.getProfilePictureUrl()!=null) {
-                    Picasso.with(PDUIClaimActivity.this)
+                    Glide.with(PDUIClaimActivity.this)
                             .load("http:" + postScan.getProfilePictureUrl())
                             .placeholder(R.drawable.pd_ui_default_user)
                             .error(R.drawable.pd_ui_default_user)

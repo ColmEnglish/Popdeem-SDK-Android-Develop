@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.popdeem.sdk.core.model;
+package com.popdeem.sdk.core.realm;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -34,7 +34,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.popdeem.sdk.core.deserializer.PDIntDeserializer;
 import com.popdeem.sdk.core.deserializer.PDLongDeserializer;
-import com.popdeem.sdk.core.realm.PDRealmLocation;
+import com.popdeem.sdk.core.model.PDLocation;
 
 import java.lang.reflect.Type;
 
@@ -43,7 +43,7 @@ import io.realm.RealmObject;
 /**
  * Popdeem Location Model Class
  */
-public class PDLocation {
+public class PDRealmLocation extends RealmObject {
 
     private String id;
     private String latitude;
@@ -56,10 +56,10 @@ public class PDLocation {
     private String brandIdentifier;
     private String brandName;
 
-    public PDLocation() {
+    public PDRealmLocation() {
     }
 
-    public PDLocation(String id, String latitude, String longitude, String address, String twitterPageId, String fbPageId, String fbPageUrl, String numberOfRewards, String brandIdentifier, String brandName) {
+    public PDRealmLocation(String id, String latitude, String longitude, String address, String twitterPageId, String fbPageId, String fbPageUrl, String numberOfRewards, String brandIdentifier, String brandName) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -72,7 +72,7 @@ public class PDLocation {
         this.brandName = brandName;
     }
 
-    public PDLocation(PDRealmLocation location) {
+    public PDRealmLocation(PDLocation location) {
         this.id = location.getId();
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
@@ -165,10 +165,10 @@ public class PDLocation {
         this.brandName = brandName;
     }
 
-    public static class PDLocationDeserializer implements JsonDeserializer<PDLocation> {
+    public static class PDLocationDeserializer implements JsonDeserializer<PDRealmLocation> {
 
         @Override
-        public PDLocation deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public PDRealmLocation deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(long.class, new PDLongDeserializer())
                     .registerTypeAdapter(int.class, new PDIntDeserializer())
@@ -177,7 +177,7 @@ public class PDLocation {
 
             JsonObject jsonObject = json.getAsJsonObject();
 
-            PDLocation location = gson.fromJson(jsonObject, PDLocation.class);
+            PDRealmLocation location = gson.fromJson(jsonObject, PDRealmLocation.class);
             if (jsonObject.has("brand")) {
                 JsonObject brandObject = jsonObject.getAsJsonObject("brand");
                 location.setBrandIdentifier(brandObject.get("id").getAsString());

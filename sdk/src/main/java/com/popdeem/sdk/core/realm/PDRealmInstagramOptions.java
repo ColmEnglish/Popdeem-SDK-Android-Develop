@@ -22,35 +22,27 @@
  * SOFTWARE.
  */
 
-package com.popdeem.sdk.core.model;
+package com.popdeem.sdk.core.realm;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.popdeem.sdk.core.realm.PDRealmTweetOptions;
-
-import java.lang.reflect.Type;
+import com.popdeem.sdk.core.model.PDInstagramOptions;
+import com.popdeem.sdk.core.model.PDTweetOptions;
 
 import io.realm.RealmObject;
 
 /**
- * Created by mikenolan on 12/11/2015.
+ * Created by mikenolan on 04/08/16.
  */
-public class PDTweetOptions {
+public class PDRealmInstagramOptions extends RealmObject {
 
     /*
-    "tweet_options": {
+    "instagram_option": {
         "prefill": "true",
-        "force_tag": "true",
+        "force_tag": "",
         "free_form": "false",
-        "prefilled_message": "This is prefilled message, allow the user to delete",
-        "forced_tag": "#forcedHashTag",
+        "prefilled_message": "",
+        "forced_tag": "#popdeem",
         "include_download_link": ""
-      }
+      },
      */
 
     private boolean prefill;
@@ -60,10 +52,10 @@ public class PDTweetOptions {
     private String forcedTag;
     private String includeDownloadLink;
 
-    public PDTweetOptions() {
+    public PDRealmInstagramOptions() {
     }
 
-    public PDTweetOptions(boolean prefill, boolean forceTag, boolean freeForm, String prefilledMessage, String forcedTag, String includeDownloadLink) {
+    public PDRealmInstagramOptions(boolean prefill, boolean forceTag, boolean freeForm, String prefilledMessage, String forcedTag, String includeDownloadLink) {
         this.prefill = prefill;
         this.forceTag = forceTag;
         this.freeForm = freeForm;
@@ -72,13 +64,13 @@ public class PDTweetOptions {
         this.includeDownloadLink = includeDownloadLink;
     }
 
-    public PDTweetOptions(PDRealmTweetOptions pdTweetOptions) {
-        this.prefill = pdTweetOptions.isPrefill();
-        this.forceTag = pdTweetOptions.isForceTag();
-        this.freeForm = pdTweetOptions.isFreeForm();
-        this.prefilledMessage = pdTweetOptions.getPrefilledMessage();
-        this.forcedTag = pdTweetOptions.getForcedTag();
-        this.includeDownloadLink = pdTweetOptions.getIncludeDownloadLink();
+    public PDRealmInstagramOptions(PDInstagramOptions pdOptions) {
+        this.prefill = pdOptions.isPrefill();
+        this.forceTag = pdOptions.isForceTag();
+        this.freeForm = pdOptions.isFreeForm();
+        this.prefilledMessage = pdOptions.getPrefilledMessage();
+        this.forcedTag = pdOptions.getForcedTag();
+        this.includeDownloadLink = pdOptions.getIncludeDownloadLink();
     }
 
     public boolean isPrefill() {
@@ -127,22 +119,6 @@ public class PDTweetOptions {
 
     public void setIncludeDownloadLink(String includeDownloadLink) {
         this.includeDownloadLink = includeDownloadLink;
-    }
-
-
-    public static class PDTweetOptionsJsonDeserializer implements JsonDeserializer<PDTweetOptions> {
-
-        @Override
-        public PDTweetOptions deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            Gson gson = new GsonBuilder()
-//                    .registerTypeAdapter(int.class, new PDUser.PDIntDeserializer())
-//                    .registerTypeAdapter(int.class, new PDUser.PDIntDeserializer())
-                    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                    .create();
-
-            PDTweetOptions tweetOptions = gson.fromJson(json, PDTweetOptions.class);
-            return tweetOptions;
-        }
     }
 
 }

@@ -60,6 +60,7 @@ import com.popdeem.sdk.core.deserializer.PDRewardDeserializer;
 import com.popdeem.sdk.core.model.PDEvent;
 import com.popdeem.sdk.core.model.PDMessage;
 import com.popdeem.sdk.core.model.PDReward;
+import com.popdeem.sdk.core.model.PDUser;
 import com.popdeem.sdk.core.realm.PDRealmUserDetails;
 import com.popdeem.sdk.core.utils.PDLog;
 import com.popdeem.sdk.uikit.activity.PDUIRedeemActivity;
@@ -70,6 +71,9 @@ import com.popdeem.sdk.uikit.utils.PDUIUtils;
 import com.popdeem.sdk.uikit.widget.PDUIDividerItemDecoration;
 import com.popdeem.sdk.uikit.widget.PDUILinearLayoutManager;
 import com.popdeem.sdk.uikit.widget.PDUISwipeRefreshLayout;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -143,25 +147,13 @@ public class PDUIWalletFragment extends Fragment {
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         if (reward.getRewardType().equalsIgnoreCase(PDReward.PD_REWARD_TYPE_SWEEPSTAKE)) {
-//                        long availableUntil = PDNumberUtils.toLong(reward.getAvailableUntilInSeconds(), 0);
-//                        String availabilityString;
-//                        if (availableUntil <= 0) {
-//                            availabilityString = getString(R.string.pd_redeem_sweepstake_reward_no_date_message_string);
-//                        } else {
-//                            availabilityString = String.format(Locale.getDefault(), "\n\n- Draw in %1s", PDUIUtils.timeUntil(availableUntil, false, true));
-//                        }
-//                        String message = String.format(Locale.getDefault(), "%1s%2s", getString(R.string.pd_redeem_sweepstake_reward_info_message_string), availabilityString);
                             String message = String.format(Locale.getDefault(), "%1s", getString(R.string.pd_redeem_sweepstake_reward_info_message_string));
-
                             builder.setTitle(R.string.pd_redeem_sweepstake_reward_info_title_string)
                                     .setMessage(message)
                                     .setPositiveButton(android.R.string.ok, null);
                             builder.create().show();
                         } else if (!reward.getRewardType().equalsIgnoreCase(PDReward.PD_REWARD_TYPE_CREDIT)) {
-                            final long REDEMPTION_TIMER = (reward.getCountdownTimer() * 1000) + 500;
-                            String minutes = PDUIUtils.millisecondsToMinutes(REDEMPTION_TIMER);
-                            String message = String.format(Locale.getDefault(), getString(R.string.pd_wallet_coupon_info_message_text), minutes, minutes);
-
+                            String message = getString(R.string.pd_wallet_coupon_info_message_text);
                             builder.setTitle(R.string.pd_redeem_reward_info_title_string)
                                     .setMessage(message)
                                     .setNegativeButton(android.R.string.cancel, null)
@@ -287,7 +279,7 @@ public class PDUIWalletFragment extends Fragment {
     }
 
     private void refreshWallet() {
-        deleteDirectoryTree(getActivity());
+//        deleteDirectoryTree(getActivity());
         Log.i("PDUIWalletFragment", "Refreshing Wallet");
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
@@ -299,7 +291,7 @@ public class PDUIWalletFragment extends Fragment {
         finishedWallet = false;
         finishedMessages = false;
 
-        PDRealmUserDetails userDetails = realm.where(PDRealmUserDetails.class).findFirst();
+        final PDRealmUserDetails userDetails = realm.where(PDRealmUserDetails.class).findFirst();
         if (userDetails == null) {
             Log.i("PDUIWalletFragment", "refreshWallet: user is Null, clearing list");
             mRewards.clear();
@@ -316,6 +308,29 @@ public class PDUIWalletFragment extends Fragment {
         } else {
             Log.i("PDUIWalletFragment", "refreshWallet: user exists");
 //            PDAPIClient.instance().getRewardsInWallet(new PDAPICallback<ArrayList<PDReward>>() {
+
+            PDAPIClient.instance().getUserDetailsForId(userDetails.getId(), new PDAPICallback<JsonObject>() {
+
+                @Override
+                public void success(JsonObject jsonObject) {
+                    if(jsonObject.get("status").getAsString().equalsIgnoreCase("User Data")){
+                        JsonObject user = jsonObject.getAsJsonObject("user");
+                        float score = Float.valueOf(user.get("advocacy_score").getAsString());
+
+                        realm.beginTransaction();
+                        userDetails.setAdvocacyScore(score);
+                        realm.commitTransaction();
+                        mAdapter.notifyDataSetChanged();
+                    }
+
+
+                }
+
+                @Override
+                public void failure(int statusCode, Exception e) {
+
+                }
+            });
             PDAPIClient.instance().getRewardsInWallet(new PDAPICallback<JsonObject>() {
                 @Override
                 public void success(JsonObject jsonObject) {

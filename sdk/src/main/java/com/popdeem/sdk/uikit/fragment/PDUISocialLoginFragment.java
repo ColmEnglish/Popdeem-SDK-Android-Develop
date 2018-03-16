@@ -47,6 +47,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -205,16 +206,16 @@ public class PDUISocialLoginFragment extends Fragment {
 
                     final String imageUrl = rewards.get(i).getCoverImage();
                     if (imageUrl == null || imageUrl.isEmpty() || imageUrl.contains("default")) {
-                        Picasso.with(getActivity())
+                        Glide.with(getActivity())
                                 .load(R.drawable.pd_ui_star_icon)
                                 .error(R.drawable.pd_ui_star_icon)
                                 .placeholder(R.drawable.pd_ui_star_icon)
                                 .into(logoImageView);
                     } else {
-                        Picasso.with(getActivity())
+                        Glide.with(getActivity())
                                 .load(imageUrl)
                                 .error(R.drawable.pd_ui_star_icon)
-                                .resizeDimen(R.dimen.pd_reward_item_image_dimen, R.dimen.pd_reward_item_image_dimen)
+                                .override(R.dimen.pd_reward_item_image_dimen, R.dimen.pd_reward_item_image_dimen)
                                 .placeholder(R.drawable.pd_ui_star_icon)
                                 .into(logoImageView);
                     }

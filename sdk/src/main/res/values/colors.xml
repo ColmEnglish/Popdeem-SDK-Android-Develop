@@ -168,6 +168,8 @@
 
 
     <color name="pd_gratitude_bg">#ccffffff</color>
+    <color name="pd_dialog_bg_bg">#ccffffff</color>
+
 
     <color name="clear">#00ffffff</color>
     <color name="DEBUG">#00ff00ff</color>

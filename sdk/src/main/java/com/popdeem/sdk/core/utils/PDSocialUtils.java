@@ -171,10 +171,23 @@ public class PDSocialUtils {
         return callbackUrl;
     }
 
-
     /**
-     * Check if user is logged in to Instagram
+     * Check if user is logged in to Instagram instantly
      */
+    public static boolean isInstagramLoggedIn() {
+        Realm realm = Realm.getDefaultInstance();
+        PDRealmUserDetails userDetails = realm.where(PDRealmUserDetails.class).findFirst();
+        String accessToken = null;
+        if (userDetails != null && userDetails.getUserInstagram() != null) {
+            accessToken = userDetails.getUserInstagram().getAccessToken();
+        }
+        realm.close();
+        return(accessToken!=null&&!accessToken.equalsIgnoreCase(""));
+    }
+
+        /**
+         * Check if user is logged in to Instagram
+         */
     public static void isInstagramLoggedIn(@NonNull final PDAPICallback<Boolean> callback) {
         Realm realm = Realm.getDefaultInstance();
         PDRealmUserDetails userDetails = realm.where(PDRealmUserDetails.class).findFirst();
@@ -418,7 +431,7 @@ public class PDSocialUtils {
      * @return true if to be shown, false otherwise
      */
     public static boolean shouldShowSocialLogin(Context context) {
-        return !(PDSocialUtils.isLoggedInToFacebook() && PDUtils.getUserToken() != null) && PDPreferencesUtils.getLoginUsesCount(context) < PDPreferencesUtils.getNumberOfLoginAttempts(context);
+        return !((PDSocialUtils.isLoggedInToFacebook() || PDSocialUtils.isInstagramLoggedIn() || isTwitterLoggedIn()) && PDUtils.getUserToken() != null) && PDPreferencesUtils.getLoginUsesCount(context) < PDPreferencesUtils.getNumberOfLoginAttempts(context);
     }
 
 }

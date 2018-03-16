@@ -24,8 +24,11 @@
 
 package com.popdeem.sdk.core.realm;
 
+import com.popdeem.sdk.core.model.PDInstagramOptions;
+
 import android.content.Context;
 
+import com.popdeem.sdk.core.model.PDTweetOptions;
 import com.popdeem.sdk.core.model.PDUser;
 
 import io.realm.DynamicRealm;
@@ -40,7 +43,7 @@ import io.realm.RealmSchema;
  */
 public class PDRealmUtils {
 
-    private static final int REALM_SCHEMA_VERSION = 9;
+    private static final int REALM_SCHEMA_VERSION = 20;
 
     public static void initRealmDB(Context context) {
         Realm.init(context);
@@ -89,10 +92,112 @@ public class PDRealmUtils {
                                 .addField(PDRealmCustomer.DECREMENT_ADVOCACY_POINTS, int.class, null);
                     }
 
+
+                    if(!schema.contains("PDFeed")){
+                        schema.create("PDFeed")
+                                .addField("userId", int.class, null)
+                                .addField("brandLogoUrlString", String.class, null)
+                                .addField("brandName", String.class, null)
+                                .addField("imageUrlString", String.class, null)
+                                .addField("rewardTypeString", String.class, null)
+                                .addField("userProfilePicUrlString", String.class, null)
+                                .addField("userFirstName", String.class, null)
+                                .addField("userLastName", String.class, null)
+                                .addField("actionText", String.class, null)
+                                .addField("timeAgo", String.class, null)
+                                .addField("descriptionString", String.class, null)
+                                .addField("caption", String.class, null);
+                    }
+
+
+
+                    if(!schema.contains("PDRealmLocation")) {
+                        schema.create("PDRealmLocation")
+                                .addField("id", String.class)
+                                .addField("latitude", String.class)
+                                .addField("longitude", String.class)
+                                .addField("address", String.class)
+                                .addField("twitterPageId", String.class)
+                                .addField("fbPageId", String.class)
+                                .addField("fbPageUrl", String.class)
+                                .addField("numberOfRewards", String.class)
+                                .addField("brandIdentifier", String.class)
+                                .addField("brandName", String.class);
+                    }
+
+                    if(!schema.contains("PDRealmTweetOptions")) {
+                        schema.create("PDRealmTweetOptions")
+                                .addField("prefill", boolean.class)
+                                .addField("forceTag", boolean.class)
+                                .addField("freeForm", boolean.class)
+                                .addField("prefilledMessage", String.class)
+                                .addField("forcedTag", String.class)
+                                .addField("includeDownloadLink", String.class);
+                    }
+
+                    if(!schema.contains("PDRealmInstagramOptions")) {
+                        schema.create("PDRealmInstagramOptions")
+                                .addField("prefill", boolean.class)
+                                .addField("forceTag", boolean.class)
+                                .addField("freeForm", boolean.class)
+                                .addField("prefilledMessage", String.class)
+                                .addField("forcedTag", String.class)
+                                .addField("includeDownloadLink", String.class);
+                    }
+
+                    if(!schema.contains("PDRealmRewardClaimingSocialNetwork")) {
+                        schema.create("PDRealmRewardClaimingSocialNetwork")
+                                .addField("name", String.class)
+                                .addField("socialAccountId", int.class)
+                                .addField("createdAt", String.class)
+                                .addField("updatedAt", String.class);
+                    }
+
+                    if(schema.contains("PDRealmReward")) {
+                        schema.remove("PDRealmReward");
+                    }
+
+                    if(!schema.contains("PDRealmReward")) {
+                            schema.create("PDRealmReward")
+                                .addField("id", String.class)
+                                .addField("rewardType", String.class)
+                                .addField("description", String.class)
+                                .addField("picture", String.class)
+                                .addField("blurredPicture", String.class)
+                                .addField("coverImage", String.class)
+                                .addField("rules", String.class)
+                                .addField("remainingCount", int.class)
+                                .addField("status", String.class)
+                                .addField("action", String.class)
+                                .addField("createdAt", long.class)
+                                .addRealmListField("locations", schema.get("PDRealmLocation"))
+                                .addRealmListField("claimingSocialNetworks", schema.get("PDRealmRewardClaimingSocialNetwork"))
+                                .addField("availableUntilInSeconds", String.class)
+                                .addField("availableNextInSeconds", String.class)
+                                .addField("revoked", String.class)
+                                .addField("twitterMediaCharacters", String.class)
+                                .addRealmListField("socialMediaTypes", String.class)
+                                .addField("disableLocationVerification", String.class)
+                                .addField("credit", String.class)
+                                .addRealmObjectField("tweetOptions", schema.get("PDRealmTweetOptions"))
+                                .addRealmObjectField("instagramOptions", schema.get("PDRealmInstagramOptions"))
+                                .addField("countdownTimer", long.class)
+                                .addField("distanceFromUser", float.class)
+                                .addField("instagramVerified", boolean.class)
+                                .addField("claimedAt", long.class)
+                                .addField("recurrence", String.class)
+                                .addField("verifying", boolean.class)
+                                .addField("globalHashtag", String.class)
+                                .addField("noTimeLimit", String.class);
+                    }
+
                 }
+//                if(schema.contains("PDFeed")){
+//                    schema.remove("PDFeed")", String.class)
+//                }
                 oldVersion = REALM_SCHEMA_VERSION;
+
             }
         }
     };
-
 }

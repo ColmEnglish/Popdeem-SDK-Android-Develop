@@ -39,167 +39,166 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/pd_reward_star_image_view"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:minWidth="60dp"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="8dp"
-            android:adjustViewBounds="true"
-            android:scaleType="centerInside"
-            android:src="@drawable/pd_ui_star_icon"
-            app:layout_constraintBottom_toBottomOf="@+id/ll_details_holder"
-            app:layout_constraintTop_toTopOf="@+id/ll_details_holder"
-            android:layout_marginLeft="16dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginStart="16dp" />
-
-        <LinearLayout
-            android:id="@+id/ll_details_holder"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:background="@color/clear"
-            android:layout_toEndOf="@id/pd_reward_star_image_view"
-            android:layout_toRightOf="@id/pd_reward_star_image_view"
-            android:orientation="vertical"
-            android:minHeight="120dp"
-            android:layout_marginRight="16dp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="5dp"
-            app:layout_constraintLeft_toRightOf="@+id/pd_reward_star_image_view"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
-<FrameLayout
-    android:layout_weight="1"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"/>
-            <TextView
-                android:paddingTop="6dp"
-                android:paddingBottom="3dp"
-                android:id="@+id/pd_reward_offer_text_view"
+            <ImageView
+                android:id="@+id/pd_reward_star_image_view"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:minLines="1"
-                android:maxLines="5"
-                android:textColor="@color/pd_reward_list_item_title_text_color"
-                android:textSize="14sp"
-                android:gravity="center_vertical"
-                android:text="Reward Title"
-                android:textStyle="bold"/>
+                android:layout_height="60dp"
+                android:minWidth="60dp"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="8dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/pd_ui_star_icon"
+                app:layout_constraintBottom_toBottomOf="@+id/ll_details_holder"
+                app:layout_constraintTop_toTopOf="@+id/ll_details_holder"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginStart="16dp" />
 
-            <TextView
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
-                android:id="@+id/pd_reward_item_rules_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:ellipsize="end"
-                android:maxLines="4"
-                android:textColor="@color/pd_reward_list_item_subtitle_text_color"
-                android:textSize="12sp"
-                android:text="Description" />
-
-            <TextView
-                android:paddingTop="3dp"
-                android:paddingBottom="6dp"
-                android:id="@+id/pd_reward_item_time_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:maxLines="1"
-                android:textColor="@color/pd_reward_list_item_time_text_color"
-                android:textSize="12sp"
-                android:text="3 Days Remaining"
-                android:textStyle="bold"/>
-            <FrameLayout
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"/>
-
-        </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/fl_divider"
-            android:layout_width="0dp"
-            android:layout_height="0.5dp"
-            android:layout_below="@+id/ll_details_holder"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginTop="5dp"
-            android:alpha="0.5"
-            android:background="@color/tw__composer_black"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ll_details_holder" />
-        <LinearLayout
-            android:id="@+id/ll_requirements_holder"
-            android:layout_below="@+id/fl_divider"
-            android:orientation="horizontal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
-            android:gravity="center"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginLeft="16dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintTop_toTopOf="@+id/fl_divider"
-            android:layout_marginTop="2dp">
-            <TextView
-                android:id="@+id/pd_reward_request_text_view"
-                android:paddingTop="3dp"
-                android:paddingBottom="6dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:textColor="@color/pd_reward_list_item_subtitle_text_color"
-                android:textSize="12sp"
-                android:text="Reward Rules" />
-            <FrameLayout
-                android:layout_weight="1"
+            <LinearLayout
+                android:id="@+id/ll_details_holder"
                 android:layout_width="0dp"
-                android:layout_height="0dp"/>
-            <ImageView
-                android:id="@+id/pd_reward_item_social_icon_view_3"
-                android:src="@drawable/pduirewardfacebookicon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <FrameLayout
-                android:layout_width="12dp"
-                android:layout_height="0dp"/>
-            <ImageView
-                android:id="@+id/pd_reward_item_social_icon_view_2"
-                android:src="@drawable/pduirewardinstagramicon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <FrameLayout
-                android:layout_width="12dp"
-                android:layout_height="0dp"/>
-            <ImageView
-                android:id="@+id/pd_reward_item_social_icon_view_1"
-                android:src="@drawable/pduirewardtwittericon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <FrameLayout
-                android:layout_width="5dp"
-                android:layout_height="0dp"/>
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@color/clear"
+                android:layout_toEndOf="@id/pd_reward_star_image_view"
+                android:layout_toRightOf="@id/pd_reward_star_image_view"
+                android:orientation="vertical"
+                android:minHeight="120dp"
+                android:layout_marginRight="16dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="5dp"
+                app:layout_constraintLeft_toRightOf="@+id/pd_reward_star_image_view"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp">
+                <FrameLayout
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"/>
+                <TextView
+                    android:paddingTop="6dp"
+                    android:paddingBottom="3dp"
+                    android:id="@+id/pd_reward_offer_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:minLines="1"
+                    android:maxLines="2"
+                    android:textColor="@color/pd_reward_list_item_title_text_color"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:text="Reward Title"
+                    android:textStyle="bold"/>
 
-        </LinearLayout>
+                <TextView
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:id="@+id/pd_reward_item_rules_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:ellipsize="end"
+                    android:maxLines="4"
+                    android:textColor="@color/pd_reward_list_item_subtitle_text_color"
+                    android:textSize="12sp"
+                    android:text="Description" />
 
-    </android.support.constraint.ConstraintLayout>
+                <TextView
+                    android:paddingTop="3dp"
+                    android:paddingBottom="6dp"
+                    android:id="@+id/pd_reward_item_time_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:maxLines="1"
+                    android:textColor="@color/pd_reward_list_item_time_text_color"
+                    android:textSize="12sp"
+                    android:text="3 Days Remaining"
+                    android:textStyle="bold"/>
+                <FrameLayout
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"/>
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/fl_divider"
+                android:layout_width="0dp"
+                android:layout_height="0.5dp"
+                android:layout_below="@+id/ll_details_holder"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="5dp"
+                android:alpha="0.5"
+                android:background="@color/tw__composer_black"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_details_holder" />
+            <LinearLayout
+                android:id="@+id/ll_requirements_holder"
+                android:layout_below="@+id/fl_divider"
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:gravity="center"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintTop_toTopOf="@+id/fl_divider"
+                android:layout_marginTop="2dp">
+                <TextView
+                    android:id="@+id/pd_reward_request_text_view"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textColor="@color/pd_reward_list_item_subtitle_text_color"
+                    android:textSize="12sp"
+                    android:text="Reward Rules" />
+                <FrameLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"/>
+                <ImageView
+                    android:id="@+id/pd_reward_item_social_icon_view_3"
+                    android:src="@drawable/pduirewardfacebookicon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <FrameLayout
+                    android:layout_width="12dp"
+                    android:layout_height="0dp"/>
+                <ImageView
+                    android:id="@+id/pd_reward_item_social_icon_view_2"
+                    android:src="@drawable/pduirewardinstagramicon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <FrameLayout
+                    android:layout_width="12dp"
+                    android:layout_height="0dp"/>
+                <ImageView
+                    android:id="@+id/pd_reward_item_social_icon_view_1"
+                    android:src="@drawable/pduirewardtwittericon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <FrameLayout
+                    android:layout_width="5dp"
+                    android:layout_height="0dp"/>
+
+            </LinearLayout>
+
+        </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 
 </RelativeLayout>

@@ -39,6 +39,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.popdeem.sdk.R;
 import com.popdeem.sdk.core.api.PDAPICallback;
 import com.popdeem.sdk.core.api.PDAPIClient;
@@ -125,10 +126,10 @@ public class PDUINotificationDialogFragment extends DialogFragment {
             imageView.post(new Runnable() {
                 @Override
                 public void run() {
-                    Picasso.with(getActivity())
+                    Glide.with(getActivity())
                             .load(imageUrl)
 
-                            .resize(imageView.getWidth(), 0)
+//                            .override(imageView.getWidth(), 1)
                             .into(imageView);
                 }
             });

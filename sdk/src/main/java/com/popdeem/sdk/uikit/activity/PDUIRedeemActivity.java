@@ -34,6 +34,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.popdeem.sdk.R;
 import com.popdeem.sdk.core.utils.PDNumberUtils;
 import com.popdeem.sdk.uikit.utils.PDUICountDownTimer;
@@ -70,13 +71,13 @@ public class PDUIRedeemActivity extends PDBaseActivity {
         String imageUrl = getIntent().getStringExtra("imageUrl");
         ImageView imageView = (ImageView) findViewById(R.id.pd_redeem_brand_image_view);
         if (imageUrl == null || imageUrl.contains("default") || imageUrl.isEmpty()) {
-            Picasso.with(this)
+            Glide.with(this)
                     .load(R.drawable.pd_ui_star_icon)
                     .error(R.drawable.pd_ui_star_icon)
                     .placeholder(R.drawable.pd_ui_star_icon)
                     .into(imageView);
         } else {
-            Picasso.with(this)
+            Glide.with(this)
                     .load(imageUrl)
                     .error(R.drawable.pd_ui_star_icon)
                     .placeholder(R.drawable.pd_ui_star_icon)

@@ -38,14 +38,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.popdeem.sdk.R;
 import com.popdeem.sdk.core.model.PDFeed;
 import com.popdeem.sdk.core.model.PDReward;
 import com.popdeem.sdk.core.realm.PDRealmUserDetails;
 import com.popdeem.sdk.core.utils.PDLog;
 import com.popdeem.sdk.core.utils.PDNumberUtils;
+import com.popdeem.sdk.uikit.fragment.PDUIFeedFragment;
+import com.popdeem.sdk.uikit.widget.PDSquareImageView;
 import com.popdeem.sdk.uikit.widget.PDUIBezelImageView;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -63,18 +68,21 @@ import static com.popdeem.sdk.core.model.PDReward.PD_SOCIAL_MEDIA_TYPE_TWITTER;
  */
 public class PDUIFeedRecyclerViewAdapter extends RecyclerView.Adapter<PDUIFeedRecyclerViewAdapter.ViewHolder> {
 
+
     public interface OnItemClickListener {
         void onItemClick(View view);
     }
 
+    private final PDUIFeedFragment context;
     private OnItemClickListener mListener;
     private ArrayList<PDFeed> mItems;
     private int mSharedImageDimen = -1;
     private int mProfileImageDimen = -1;
     private String mCurrentUserName = "";
 
-    public PDUIFeedRecyclerViewAdapter(ArrayList<PDFeed> mItems) {
+    public PDUIFeedRecyclerViewAdapter(ArrayList<PDFeed> mItems, PDUIFeedFragment context) {
         this.mItems = mItems;
+        this.context = context;
 
         Realm realm = Realm.getDefaultInstance();
         PDRealmUserDetails userDetails = realm.where(PDRealmUserDetails.class).findFirst();
@@ -101,7 +109,7 @@ public class PDUIFeedRecyclerViewAdapter extends RecyclerView.Adapter<PDUIFeedRe
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final PDFeed item = this.mItems.get(position);
 
         boolean isCheckin = item.getImageUrlString().contains("default");
@@ -109,20 +117,32 @@ public class PDUIFeedRecyclerViewAdapter extends RecyclerView.Adapter<PDUIFeedRe
             holder.sharedImageView.setVisibility(View.GONE);
             holder.sharedImageView.setImageDrawable(null);
         } else {
+
+
             holder.sharedImageView.setVisibility(View.VISIBLE);
-            Picasso.with(holder.context)
+
+            Glide.with(context)
                     .load(item.getImageUrlString())
-//                    .resize(mSharedImageDimen, mSharedImageDimen)
+                    .error(null)
+                    .dontAnimate()
                     .into(holder.sharedImageView);
+
         }
 
         if (item.getUserProfilePicUrlString().isEmpty()) {
 
+            Glide.with(context)
+                    .load(R.drawable.pduikit_default_user)
+                    .dontAnimate()
+                    .fitCenter()
+                    .into(holder.profileImageView);
         } else {
-            Picasso.with(holder.context)
+            Glide.with(context)
                     .load(item.getUserProfilePicUrlString())
-//                    .resize(mProfileImageDimen, mProfileImageDimen)
-                    .fit()
+                    .placeholder(R.drawable.pduikit_default_user)
+                    .error(R.drawable.pduikit_default_user)
+                    .dontAnimate()
+                    .fitCenter()
                     .into(holder.profileImageView);
         }
 
@@ -179,26 +199,26 @@ public class PDUIFeedRecyclerViewAdapter extends RecyclerView.Adapter<PDUIFeedRe
 
         Context context;
         PDUIBezelImageView profileImageView;
-        ImageView sharedImageView;
+        PDSquareImageView sharedImageView;
         TextView userNameTextView;
         TextView userCommentTextView;
         TextView timeTextView;
 
         public ViewHolder(View itemView, Context context) {
             super(itemView);
-            itemView.setClickable(true);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null) {
-                        mListener.onItemClick(v);
-                    }
-                }
-            });
+//            itemView.setClickable(true);
+//            itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (mListener != null) {
+//                        mListener.onItemClick(v);
+//                    }
+//                }
+//            });
 
             this.context = context;
             this.profileImageView = (PDUIBezelImageView) itemView.findViewById(R.id.pd_feed_profile_image_view);
-            this.sharedImageView = (ImageView) itemView.findViewById(R.id.pd_feed_shared_image_view);
+            this.sharedImageView = (PDSquareImageView) itemView.findViewById(R.id.pd_feed_shared_image_view);
             this.userNameTextView = (TextView) itemView.findViewById(R.id.pd_feed_user_name_text_view);
             this.userCommentTextView = (TextView) itemView.findViewById(R.id.pd_feed_user_comment_text_view);
             this.timeTextView = (TextView) itemView.findViewById(R.id.pd_feed_time_text_view);

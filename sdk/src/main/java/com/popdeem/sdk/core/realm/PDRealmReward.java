@@ -22,19 +22,19 @@
  * SOFTWARE.
  */
 
-package com.popdeem.sdk.core.model;
+package com.popdeem.sdk.core.realm;
 
 import android.support.annotation.StringDef;
 
 import com.google.gson.annotations.SerializedName;
-import com.popdeem.sdk.core.realm.PDRealmInstagramOptions;
-import com.popdeem.sdk.core.realm.PDRealmLocation;
-import com.popdeem.sdk.core.realm.PDRealmReward;
-import com.popdeem.sdk.core.realm.PDRealmTweetOptions;
+import com.popdeem.sdk.core.model.PDInstagramOptions;
+import com.popdeem.sdk.core.model.PDLocation;
+import com.popdeem.sdk.core.model.PDReward;
+import com.popdeem.sdk.core.model.PDRewardClaimingSocialNetwork;
+import com.popdeem.sdk.core.model.PDTweetOptions;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
 
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -43,7 +43,7 @@ import io.realm.RealmObject;
 /**
  * Popdeem Reward Model Class
  */
-public class PDReward {
+public class PDRealmReward extends RealmObject {
 
     public static final String PD_TRUE = "true";
     public static final String PD_FALSE = "false";
@@ -93,21 +93,21 @@ public class PDReward {
     private String revoked;
 
     private String twitterMediaCharacters;
-    private ArrayList<String> socialMediaTypes;
+    private RealmList<String> socialMediaTypes;
 
     private String disableLocationVerification;
     private String credit;
 
-    private PDTweetOptions tweetOptions;
+    private PDRealmTweetOptions tweetOptions;
     @SerializedName("instagram_option")
-    private PDInstagramOptions instagramOptions;
-    private ArrayList<PDLocation> locations;
+    private PDRealmInstagramOptions instagramOptions;
+    private RealmList<PDRealmLocation> locations;
     private long countdownTimer;
 
     private float distanceFromUser;
 
     private boolean instagramVerified;
-    private ArrayList<PDRewardClaimingSocialNetwork> claimingSocialNetworks;
+    private RealmList<PDRealmRewardClaimingSocialNetwork> claimingSocialNetworks;
 
     private long claimedAt;
     private String recurrence;
@@ -122,11 +122,11 @@ public class PDReward {
     @SerializedName("no_time_limit")
     private String noTimeLimit;
 
-    public PDReward() {
+    public PDRealmReward() {
         verifying = false;
     }
 
-    public PDReward(String id, String rewardType, String description, String picture, String blurredPicture, String coverImage, String rules, int remainingCount, String status, String action, long createdAt, String availableUntilInSeconds, String availableNextInSeconds, String revoked, String twitterMediaCharacters, ArrayList<String> socialMediaTypes, String disableLocationVerification, String credit, PDTweetOptions tweetOptions, ArrayList<PDLocation> locations, long countdownTimer, boolean instagramVerified, long claimedAt, String globalHashtag, String recurrence, String noTimeLimit) {
+    public PDRealmReward(String id, String rewardType, String description, String picture, String blurredPicture, String coverImage, String rules, int remainingCount, String status, String action, long createdAt, String availableUntilInSeconds, String availableNextInSeconds, String revoked, String twitterMediaCharacters, RealmList<String> socialMediaTypes, String disableLocationVerification, String credit, PDRealmTweetOptions tweetOptions, RealmList<PDRealmLocation> locations, long countdownTimer, boolean instagramVerified, long claimedAt, String globalHashtag, String recurrence, String noTimeLimit) {
         this.id = id;
         this.rewardType = rewardType;
         this.description = description;
@@ -145,18 +145,19 @@ public class PDReward {
         this.socialMediaTypes = socialMediaTypes;
         this.disableLocationVerification = disableLocationVerification;
         this.credit = credit;
+
         this.tweetOptions = tweetOptions;
         this.locations = locations;
+
         this.countdownTimer = countdownTimer;
         this.instagramVerified = instagramVerified;
         this.claimedAt = claimedAt;
         this.globalHashtag = globalHashtag;
         this.recurrence = recurrence;
         this.noTimeLimit = noTimeLimit;
-
     }
 
-    public PDReward(PDRealmReward reward) {
+    public PDRealmReward(PDReward reward) {
         this.id = reward.getId();
         this.rewardType = reward.getRewardType();
         this.description = reward.getDescription();
@@ -182,20 +183,19 @@ public class PDReward {
         this.noTimeLimit = reward.getNoTimeLimit();
 
         if(reward.getInstagramOptions()!=null) {
-            this.instagramOptions = new PDInstagramOptions(reward.getInstagramOptions());
+            this.instagramOptions = new PDRealmInstagramOptions(reward.getInstagramOptions());
         }
         if(reward.getTweetOptions()!=null) {
-            this.tweetOptions = new PDTweetOptions(reward.getTweetOptions());
+            this.tweetOptions = new PDRealmTweetOptions(reward.getTweetOptions());
         }
-        this.locations = new ArrayList<>();
+        this.locations = new RealmList<>();
         for (int i = 0; i < reward.getLocations().size(); i++) {
-            this.locations.add(new PDLocation(reward.getLocations().get(i)));
+            this.locations.add(new PDRealmLocation(reward.getLocations().get(i)));
         }
-        this.socialMediaTypes = new ArrayList<>();
+        this.socialMediaTypes = new RealmList<>();
         this.socialMediaTypes.addAll(reward.getSocialMediaTypes());
 
     }
-
 
     public String getId() {
         return id;
@@ -317,35 +317,35 @@ public class PDReward {
         this.twitterMediaCharacters = twitterMediaCharacters;
     }
 
-    public ArrayList<String> getSocialMediaTypes() {
+    public RealmList<String> getSocialMediaTypes() {
         return socialMediaTypes;
     }
 
-    public void setSocialMediaTypes(ArrayList<String> socialMediaTypes) {
+    public void setSocialMediaTypes(RealmList<String> socialMediaTypes) {
         this.socialMediaTypes = socialMediaTypes;
     }
 
-    public PDTweetOptions getTweetOptions() {
+    public PDRealmTweetOptions getTweetOptions() {
         return tweetOptions;
     }
 
-    public void setTweetOptions(PDTweetOptions tweetOptions) {
+    public void setTweetOptions(PDRealmTweetOptions tweetOptions) {
         this.tweetOptions = tweetOptions;
     }
 
-    public PDInstagramOptions getInstagramOptions() {
+    public PDRealmInstagramOptions getInstagramOptions() {
         return instagramOptions;
     }
 
-    public void setInstagramOptions(PDInstagramOptions instagramOptions) {
+    public void setInstagramOptions(PDRealmInstagramOptions instagramOptions) {
         this.instagramOptions = instagramOptions;
     }
 
-    public ArrayList<PDLocation> getLocations() {
+    public RealmList<PDRealmLocation> getLocations() {
         return locations;
     }
 
-    public void setLocations(ArrayList<PDLocation> locations) {
+    public void setLocations(RealmList<PDRealmLocation> locations) {
         this.locations = locations;
     }
 
@@ -393,11 +393,11 @@ public class PDReward {
         this.instagramVerified = instagramVerified;
     }
 
-    public ArrayList<PDRewardClaimingSocialNetwork> getClaimingSocialNetworks() {
+    public RealmList<PDRealmRewardClaimingSocialNetwork> getClaimingSocialNetworks() {
         return claimingSocialNetworks;
     }
 
-    public void setClaimingSocialNetworks(ArrayList<PDRewardClaimingSocialNetwork> claimingSocialNetworks) {
+    public void setClaimingSocialNetworks(RealmList<PDRealmRewardClaimingSocialNetwork> claimingSocialNetworks) {
         this.claimingSocialNetworks = claimingSocialNetworks;
     }
 
@@ -425,11 +425,11 @@ public class PDReward {
         this.globalHashtag = globalHashtag;
     }
 
-    public boolean claimedUsingNetwork(@PDReward.PDSocialMediaType String network) {
+    public boolean claimedUsingNetwork(@PDRealmReward.PDSocialMediaType String network) {
         if (this.claimingSocialNetworks == null) {
             return false;
         }
-        for (PDRewardClaimingSocialNetwork n : this.claimingSocialNetworks) {
+        for (PDRealmRewardClaimingSocialNetwork n : this.claimingSocialNetworks) {
             if (n.getName().equalsIgnoreCase(network)) {
                 return true;
             }

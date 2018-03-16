@@ -64,22 +64,41 @@ public class PDAmbassadorView extends LinearLayout {
         if(bronzePoint<=0) {
             bronzePoint = (findViewById(R.id.tv_bronze).getWidth()/2) + findViewById(R.id.tv_bronze).getX();
             silverPoint = (findViewById(R.id.tv_silver).getWidth()/2) + findViewById(R.id.tv_silver).getX();
-            goldPoint = (findViewById(R.id.tv_gold).getWidth()) + findViewById(R.id.tv_gold).getX();
-            setLevel(setLevel,animated);
+            goldPoint = (findViewById(R.id.tv_gold).getWidth()/2) + findViewById(R.id.tv_gold).getX();
+            setLevel(-1,animated);
         }
     }
 
     /**
-     * Set the progress level of the ambassador view 0 to 3
+     * Set the progress level of the ambassador view
      *
-     * @param level level to set the view (can be 0 to 3)
+     * @param amount amount input to set the view
      * @param animated animate the progress view from 0 to the set level
      */
 
-    public void setLevel(int level, boolean animated){
+    public void setLevel(int amount, boolean animated){
+
+        int level = 0;
+
+        if (amount < 30) {
+            level = 0;
+        }
+        if (amount >= 30 && amount <= 60) {
+            level = 1;
+        }
+        if (amount >= 60 && amount <= 90) {
+            level = 2;
+        }
+
+        if (amount >= 90){
+            level = 3;
+        }
+
+        if(amount>=0) {
+            oldLevel = setLevel;
+            setLevel = level;
+        }
         this.animated = animated;
-        oldLevel = setLevel;
-        setLevel = level;
         float setWidth = 1;
 
 //        bronzePoint = (findViewById(R.id.tv_bronze).getWidth()/2) + findViewById(R.id.tv_bronze).getX();

@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.popdeem.sdk.R;
 import com.popdeem.sdk.core.model.PDMessage;
 import com.popdeem.sdk.uikit.utils.PDUIUtils;
@@ -74,11 +75,11 @@ public class PDUIMessagesRecyclerAdapter extends RecyclerView.Adapter<PDUIMessag
         holder.dateTextView.setText(PDUIUtils.convertUnixTimeToDate(message.getCreatedAt(), PDUIUtils.PD_DATE_FORMAT));
 
         if (message.getImageUrl() == null || message.getImageUrl().isEmpty() || message.getImageUrl().contains("default")) {
-            Picasso.with(holder.context)
+            Glide.with(holder.context)
                     .load(R.drawable.pd_ui_star_icon)
                     .into(holder.imageView);
         } else {
-            Picasso.with(holder.context)
+            Glide.with(holder.context)
                     .load(message.getImageUrl())
                     .placeholder(R.drawable.pd_ui_star_icon)
                     .error(R.drawable.pd_ui_star_icon)

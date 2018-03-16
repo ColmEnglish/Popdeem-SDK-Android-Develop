@@ -24,12 +24,18 @@
 
 package com.popdeem.sdk.uikit.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,11 +51,8 @@ import com.popdeem.sdk.core.api.abra.PDAbraConfig;
 import com.popdeem.sdk.core.api.abra.PDAbraLogEvent;
 import com.popdeem.sdk.core.api.abra.PDAbraProperties;
 import com.popdeem.sdk.core.realm.PDRealmCustomer;
-import com.popdeem.sdk.uikit.activity.PDUIInboxActivity;
-import com.popdeem.sdk.uikit.activity.PDUISettingsActivity;
+import com.popdeem.sdk.core.utils.PDLog;
 import com.popdeem.sdk.uikit.adapter.PDUIHomeFlowPagerAdapter;
-import com.popdeem.sdk.uikit.fragment.dialog.PDUIGratitudeDialog;
-import com.popdeem.sdk.uikit.utils.PDUIColorUtils;
 import com.popdeem.sdk.uikit.widget.BadgedTabLayout;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 
@@ -63,6 +66,9 @@ import io.realm.RealmResults;
  */
 public class PDUIHomeFlowFragment extends Fragment {
 
+    public static final String PD_LOGGED_IN_RECEIVER_FILTER = "com.popdeem.sdk.LOGGED_IN";
+    private ViewPager viewPager;
+
     public static PDUIHomeFlowFragment newInstance() {
         return new PDUIHomeFlowFragment();
     }
@@ -74,6 +80,21 @@ public class PDUIHomeFlowFragment extends Fragment {
 
     public PDUIHomeFlowFragment() {
     }
+
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        Picasso.Builder builder = new Picasso.Builder(getActivity());
+//        builder.downloader(new OkHttp3Downloader(getActivity(),Integer.MAX_VALUE));
+//        Picasso built = builder.build();
+//        built.setIndicatorsEnabled(true);
+//        built.setLoggingEnabled(true);
+//        try {
+//            Picasso.setSingletonInstance(built);
+//        }catch (IllegalStateException e){
+//
+//        }
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -101,7 +122,7 @@ public class PDUIHomeFlowFragment extends Fragment {
 //        settingsButton.setVisibility(View.GONE);
 
         mAdapter = new PDUIHomeFlowPagerAdapter(getChildFragmentManager(), getActivity());
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.pd_home_view_pager);
+        viewPager = (ViewPager) view.findViewById(R.id.pd_home_view_pager);
         viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(mAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -160,6 +181,9 @@ public class PDUIHomeFlowFragment extends Fragment {
         }
     }
 
+
+
+
     private void logTabPageView(int position) {
         switch (position) {
             case 0: // Rewards
@@ -181,8 +205,18 @@ public class PDUIHomeFlowFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(mLoggedInBroadcastReceiver);
+
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+
+        getActivity().registerReceiver(mLoggedInBroadcastReceiver, new IntentFilter(PD_LOGGED_IN_RECEIVER_FILTER));
+
         PDAbraLogEvent.log(PDAbraConfig.ABRA_EVENT_PAGE_VIEWED, new PDAbraProperties.Builder()
                 .add(PDAbraConfig.ABRA_PROPERTYNAME_SOURCE_PAGE, PDAbraConfig.ABRA_PROPERTYVALUE_PAGE_REWARDS_HOME)
                 .create());
@@ -199,7 +233,18 @@ public class PDUIHomeFlowFragment extends Fragment {
                 }
             }
         }
+
     }
+
+    private final BroadcastReceiver mLoggedInBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            PDLog.i(PDUIRewardsFragment.class, "LoggedIn broadcast onReceive");
+            if(viewPager!=null){
+                viewPager.setCurrentItem(2,false);
+            }
+        }
+    };
 
     public void switchToWalletForVerify(boolean verificationNeeded, String rewardId) {
         mMoveToWallet = true;

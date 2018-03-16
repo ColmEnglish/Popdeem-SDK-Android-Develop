@@ -7,6 +7,14 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:id="@+id/pd_logged_in_view"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -42,6 +50,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    </LinearLayout>
+
     <LinearLayout
         android:clickable="true"
         android:id="@+id/pd_connect_layout"
@@ -66,6 +76,9 @@
             android:layout_height="wrap_content"
             android:src="@drawable/pduikit_arrow" />
     </LinearLayout>
+
+
+
 
     <LinearLayout
         android:clickable="true"
@@ -124,6 +137,19 @@
         android:text="My History"
         android:textAllCaps="true"
         android:textSize="@dimen/social_login_body_text_size" />
+
+    <TextView
+        android:id="@+id/version_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="false"
+        android:paddingLeft="24dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:text="V"
+        android:textAllCaps="true"
+        android:textSize="8dp" />
 
     <LinearLayout
         android:id="@+id/pd_wallet_no_items_view"

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.facebook.AccessToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -121,12 +122,12 @@ public class PDUIScanActivity extends PDBaseActivity implements View.OnClickList
 
         //profile photo
         PDUIBezelImageView userProfilePicture = (PDUIBezelImageView) PDScanSuccess.findViewById(R.id.pd_scan_success_user_image_view);
-        Picasso.with(this)
+        Glide.with(this)
                 .load(pdbgScanResponseModel.getProfilePictureUrl())
                 .centerCrop()
                 .placeholder(R.drawable.pd_ui_default_user)
                 .error(R.drawable.pd_ui_default_user)
-                .resizeDimen(R.dimen.pd_scan_profile_image_dimen, R.dimen.pd_scan_profile_image_dimen)
+//                .override(R.dimen.pd_scan_profile_image_dimen, R.dimen.pd_scan_profile_image_dimen)
                 .into(userProfilePicture);
 
 
@@ -137,9 +138,9 @@ public class PDUIScanActivity extends PDBaseActivity implements View.OnClickList
 
         //media image
         ImageView mediaImage = (ImageView) PDScanSuccess.findViewById(R.id.image_media_url);
-        Picasso.with(this)
+        Glide.with(this)
                 .load(pdbgScanResponseModel.getMediaUrl())
-                .fit()
+                .fitCenter()
                 .into(mediaImage);
 
 

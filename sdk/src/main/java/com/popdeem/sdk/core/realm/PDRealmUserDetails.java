@@ -65,7 +65,7 @@ public class PDRealmUserDetails extends RealmObject {
         this.userFacebook = new PDRealmUserFacebook(user.getPdUserFacebook());
         this.userInstagram = new PDRealmUserInstagram(user.getPdUserInstagram());
         this.userTwitter = new PDRealmUserTwitter(user.getPdUserTwitter());
-        this.advocacy_score = user.getAdvocacyScore();
+        this.advocacy_score = Float.valueOf(user.getAdvocacyScore());
     }
 
     public int getUid() {

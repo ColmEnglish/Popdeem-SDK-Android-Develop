@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.popdeem.sdk.core.model;
+package com.popdeem.sdk.core.realm;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -31,7 +31,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import com.popdeem.sdk.core.realm.PDRealmTweetOptions;
+import com.popdeem.sdk.core.model.PDTweetOptions;
 
 import java.lang.reflect.Type;
 
@@ -40,7 +40,7 @@ import io.realm.RealmObject;
 /**
  * Created by mikenolan on 12/11/2015.
  */
-public class PDTweetOptions {
+public class PDRealmTweetOptions extends RealmObject {
 
     /*
     "tweet_options": {
@@ -60,10 +60,10 @@ public class PDTweetOptions {
     private String forcedTag;
     private String includeDownloadLink;
 
-    public PDTweetOptions() {
+    public PDRealmTweetOptions() {
     }
 
-    public PDTweetOptions(boolean prefill, boolean forceTag, boolean freeForm, String prefilledMessage, String forcedTag, String includeDownloadLink) {
+    public PDRealmTweetOptions(boolean prefill, boolean forceTag, boolean freeForm, String prefilledMessage, String forcedTag, String includeDownloadLink) {
         this.prefill = prefill;
         this.forceTag = forceTag;
         this.freeForm = freeForm;
@@ -72,7 +72,7 @@ public class PDTweetOptions {
         this.includeDownloadLink = includeDownloadLink;
     }
 
-    public PDTweetOptions(PDRealmTweetOptions pdTweetOptions) {
+    public PDRealmTweetOptions(PDTweetOptions pdTweetOptions) {
         this.prefill = pdTweetOptions.isPrefill();
         this.forceTag = pdTweetOptions.isForceTag();
         this.freeForm = pdTweetOptions.isFreeForm();
@@ -130,17 +130,17 @@ public class PDTweetOptions {
     }
 
 
-    public static class PDTweetOptionsJsonDeserializer implements JsonDeserializer<PDTweetOptions> {
+    public static class PDTweetOptionsJsonDeserializer implements JsonDeserializer<PDRealmTweetOptions> {
 
         @Override
-        public PDTweetOptions deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public PDRealmTweetOptions deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             Gson gson = new GsonBuilder()
 //                    .registerTypeAdapter(int.class, new PDUser.PDIntDeserializer())
 //                    .registerTypeAdapter(int.class, new PDUser.PDIntDeserializer())
                     .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                     .create();
 
-            PDTweetOptions tweetOptions = gson.fromJson(json, PDTweetOptions.class);
+            PDRealmTweetOptions tweetOptions = gson.fromJson(json, PDRealmTweetOptions.class);
             return tweetOptions;
         }
     }

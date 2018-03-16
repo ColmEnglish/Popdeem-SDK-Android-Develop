@@ -31,10 +31,12 @@ public class PDUIGratitudeDialog extends Dialog {
 
 
 
-
+    Context context;
 
     public PDUIGratitudeDialog(@NonNull Context context, @StyleRes int themeResId) {
         super(context, themeResId);
+        this.context = context;
+//        if(context instanceof )
     }
 
     public static PDUIGratitudeDialog showGratitudeDialog(Context context, String type){
@@ -71,35 +73,23 @@ public class PDUIGratitudeDialog extends Dialog {
         }
 
 
-        if(type.equalsIgnoreCase("share")) {
+//        if(type.equalsIgnoreCase("share")) {
             ((TextView) dialog.findViewById(R.id.pd_gratitude_title)).setText(context.getString(R.string.pd_gratitude_sweet_ribs_and_burgers));
             ((TextView) dialog.findViewById(R.id.pd_gratitude_description)).setText(context.getString(R.string.pd_gratitude_share_body_text));
             if (mUser != null) {
-                if (mUser.getAdvocacyScore()+increment < 30) {
-                    ambassadorView.setLevel(0, true);
-                } else if (mUser.getAdvocacyScore()+increment <= 60) {
-                    ambassadorView.setLevel(1, true);
-                } else if (mUser.getAdvocacyScore()+increment <= 90) {
-                    ambassadorView.setLevel(2, true);
-                } else {
-                    ambassadorView.setLevel(3, true);
-                }
+                ambassadorView.setLevel((int)mUser.getAdvocacyScore()+increment, ((int)mUser.getAdvocacyScore() < 90));
+
+                mRealm.beginTransaction();
+                mUser.setAdvocacyScore(mUser.getAdvocacyScore()+increment);
+                mRealm.commitTransaction();
             }
-        }else{
-            ((TextView) dialog.findViewById(R.id.pd_gratitude_title)).setText(context.getString(R.string.pd_gratitude_thanks_for_connecting));
-            ((TextView) dialog.findViewById(R.id.pd_gratitude_description)).setText(context.getString(R.string.pd_gratitude_connect_body_text));
-            if (mUser != null) {
-                if (mUser.getAdvocacyScore() < 30) {
-                    ambassadorView.setLevel(0, true);
-                } else if (mUser.getAdvocacyScore() <= 60) {
-                    ambassadorView.setLevel(1, true);
-                } else if (mUser.getAdvocacyScore() <= 90) {
-                    ambassadorView.setLevel(2, true);
-                } else {
-                    ambassadorView.setLevel(3, true);
-                }
-            }
-        }
+//        }else{
+//            ((TextView) dialog.findViewById(R.id.pd_gratitude_title)).setText(context.getString(R.string.pd_gratitude_thanks_for_connecting));
+//            ((TextView) dialog.findViewById(R.id.pd_gratitude_description)).setText(context.getString(R.string.pd_gratitude_connect_body_text));
+//            if (mUser != null) {
+//                ambassadorView.setLevel((int)mUser.getAdvocacyScore(), true);
+//            }
+//        }
 
 
 

@@ -121,7 +121,7 @@ public final class PopdeemSDK {
                 @Override
                 public void success(String uid) {
                     PDRealmNonSocialUID uidReam = new PDRealmNonSocialUID();
-                    uidReam.setId(0);
+//                    uidReam.setId(0);
                     uidReam.setRegistered(false);
                     uidReam.setUid(uid);
 
@@ -292,7 +292,7 @@ public final class PopdeemSDK {
                             uidReam = new PDRealmNonSocialUID();
                             uidReam.setUid(uid.getUid());
                         }
-                        uidReam.setId(0);
+//                        uidReam.setId(0);
                         uidReam.setRegistered(true);
 
                         realm.copyToRealmOrUpdate(uidReam);

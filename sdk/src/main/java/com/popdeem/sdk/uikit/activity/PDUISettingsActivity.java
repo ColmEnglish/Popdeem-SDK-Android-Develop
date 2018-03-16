@@ -165,6 +165,10 @@ public class PDUISettingsActivity extends PDBaseActivity implements PDUISettings
         TextView textView = (TextView) findViewById(R.id.pd_settings_user_name_text_view);
         if (mUser.getFirstName() != null && mUser.getLastName() != null) {
             textView.setText(String.format(Locale.getDefault(), "%1s %2s", mUser.getFirstName(), mUser.getLastName()));
+        }else if (mUser.getFirstName() !=null){
+            textView.setText(mUser.getFirstName());
+        }else if (mUser.getLastName() !=null){
+            textView.setText(mUser.getFirstName());
         }
         String profileUrl = "";
         if (mUser.getUserFacebook() != null && mUser.getUserFacebook().getProfilePictureUrl() != null && !mUser.getUserFacebook().getProfilePictureUrl().isEmpty()) {
@@ -179,8 +183,6 @@ public class PDUISettingsActivity extends PDBaseActivity implements PDUISettings
             Picasso.with(this)
                     .load(profileUrl)
                     .centerCrop()
-                    .placeholder(R.drawable.pd_ui_default_user)
-                    .error(R.drawable.pd_ui_default_user)
                     .resizeDimen(R.dimen.pd_settings_image_dimen, R.dimen.pd_settings_image_dimen)
                     .into(imageView);
         } else {
@@ -190,11 +192,11 @@ public class PDUISettingsActivity extends PDBaseActivity implements PDUISettings
 
     private void displayDefaultUserImage() {
         final PDUIBezelImageView imageView = (PDUIBezelImageView) findViewById(R.id.pd_settings_user_image_view);
-        Picasso.with(this)
-                .load(R.drawable.pd_ui_default_user)
-                .centerCrop()
-                .resizeDimen(R.dimen.pd_settings_image_dimen, R.dimen.pd_settings_image_dimen)
-                .into(imageView);
+//        Picasso.with(this)
+//                .load(R.drawable.pd_ui_default_user)
+//                .centerCrop()
+//                .resizeDimen(R.dimen.pd_settings_image_dimen, R.dimen.pd_settings_image_dimen)
+//                .into(imageView);
     }
 
     @Override
@@ -323,7 +325,7 @@ public class PDUISettingsActivity extends PDBaseActivity implements PDUISettings
     }
 
     private void showConnectAccountDialog(@PDUIConnectSocialAccountFragment.PDConnectSocialAccountType int type, final int position) {
-        PDUIConnectSocialAccountFragment fragment = PDUIConnectSocialAccountFragment.newInstance(type, new PDUIConnectSocialAccountFragment.PDUIConnectSocialAccountCallback() {
+        PDUIConnectSocialAccountFragment fragment = PDUIConnectSocialAccountFragment.newInstance(type, true, new PDUIConnectSocialAccountFragment.PDUIConnectSocialAccountCallback() {
             @Override
             public void onAccountConnected(@PDUIConnectSocialAccountFragment.PDConnectSocialAccountType int type) {
                 updateUserFromRealm();

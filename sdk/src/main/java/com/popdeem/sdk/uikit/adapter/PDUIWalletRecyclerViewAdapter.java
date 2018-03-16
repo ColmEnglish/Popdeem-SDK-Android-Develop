@@ -39,7 +39,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.JsonObject;
+import com.popdeem.sdk.BuildConfig;
 import com.popdeem.sdk.R;
 import com.popdeem.sdk.core.model.PDEvent;
 import com.popdeem.sdk.core.model.PDReward;
@@ -52,6 +54,7 @@ import com.popdeem.sdk.uikit.widget.PDAmbassadorView;
 import com.popdeem.sdk.uikit.widget.PDUIBezelImageView;
 import com.readystatesoftware.viewbadger.BadgeView;
 import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.joda.time.LocalTime;
@@ -159,26 +162,27 @@ public class PDUIWalletRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
             holder.brandImageView.setVisibility(View.VISIBLE);
             holder.titleTextView.setVisibility(View.VISIBLE);
-
             final PDReward reward = (PDReward) this.mItems.get(position - 1);
 
             String imageUrl = reward.getCoverImage();
             Log.i("IMAGEURL", "onBindViewHolder: " + reward.toString());
             Log.i("IMAGEURL", "onBindViewHolder: " + imageUrl);
             if (imageUrl.contains("default")) {
-                Picasso.with(holder.context)
+                Glide.with(holder.context)
                         .load(R.drawable.pd_ui_star_icon)
-                        .into(holder.brandImageView);
+                        .into(holder.brandImageView)
+                ;
             } else {
-                Picasso.with(holder.context)
+                Glide.with(holder.context)
                         .load(imageUrl)
                         .error(R.drawable.pd_ui_star_icon)
                         .placeholder(R.drawable.pd_ui_star_icon)
-                        .resize(mImageDimen, 0)
+//                        .override(mImageDimen, 1)
                         .into(holder.brandImageView);
             }
 
             holder.subTitleTextView.setText(R.string.pd_wallet_redeem_text);
+            holder.chevronImageView.setVisibility(View.VISIBLE);
             holder.titleTextView.setText(reward.getDescription());
 
             if (reward.getRewardType().equalsIgnoreCase(PDReward.PD_REWARD_TYPE_SWEEPSTAKE)) {
@@ -295,12 +299,10 @@ public class PDUIWalletRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 profileUrl = mUser.getUserInstagram().getProfilePictureUrl();
             }
             if (profileUrl.length() > 0) {
-                Picasso.with(header.context)
+                Glide.with(header.context)
                         .load(profileUrl)
-                        .centerCrop()
                         .placeholder(R.drawable.pd_ui_default_user)
                         .error(R.drawable.pd_ui_default_user)
-                        .resizeDimen(R.dimen.pd_settings_image_dimen, R.dimen.pd_settings_image_dimen)
                         .into(header.profilePic);
             } else {
                 displayDefaultUserImage(header.context, header.profilePic);
@@ -308,22 +310,18 @@ public class PDUIWalletRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
             if (mUser.getFirstName() != null && mUser.getLastName() != null) {
                 header.profileName.setText(String.format(Locale.getDefault(), "%1s %2s", mUser.getFirstName(), mUser.getLastName()));
+            }else if (mUser.getFirstName() !=null){
+                header.profileName.setText(mUser.getFirstName());
+            }else if (mUser.getLastName() !=null){
+                header.profileName.setText(mUser.getFirstName());
             }
 
-            header.ambassadorView.setLevel(0, false);
 
-            if(mUser.getAdvocacyScore()<30) {
-                header.ambassadorView.setLevel(0, true);
-            }else if(mUser.getAdvocacyScore()<=60) {
-                header.ambassadorView.setLevel(1, true);
-            }else if(mUser.getAdvocacyScore()<=90) {
-                header.ambassadorView.setLevel(2, true);
-            }else{
-                header.ambassadorView.setLevel(3, true);
-            }
-
+            header.ambassadorView.setLevel((int)mUser.getAdvocacyScore(), false);
+            header.loggedInLinearLayout.setVisibility(View.VISIBLE);
         }else{
             displayDefaultUserImage(header.context, header.profilePic);
+            header.loggedInLinearLayout.setVisibility(View.GONE);
         }
 
         header.messagesBadgeTextView.setText(""+messagesCount);
@@ -340,10 +338,8 @@ public class PDUIWalletRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
     }
 
     private void displayDefaultUserImage(Context context, PDUIBezelImageView imageview) {
-        Picasso.with(context)
+        Glide.with(context)
                 .load(R.drawable.pd_ui_default_user)
-                .centerCrop()
-                .resizeDimen(R.dimen.pd_settings_image_dimen, R.dimen.pd_settings_image_dimen)
                 .into(imageview);
     }
 
@@ -416,6 +412,7 @@ public class PDUIWalletRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
         Context context;
         ImageView brandImageView;
+        ImageView chevronImageView;
         TextView titleTextView;
         TextView subTitleTextView;
         FrameLayout verifyContainer;
@@ -438,6 +435,7 @@ public class PDUIWalletRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
             this.context = context;
             this.brandImageView = (ImageView) itemView.findViewById(R.id.pd_wallet_brand_image_view);
+            this.chevronImageView = (ImageView) itemView.findViewById(R.id.chevron);
             this.titleTextView = (TextView) itemView.findViewById(R.id.pd_wallet_reward_title_text_view);
             this.subTitleTextView = (TextView) itemView.findViewById(R.id.pd_wallet_reward_sub_title_text_view);
             this.verifyContainer = (FrameLayout) itemView.findViewById(R.id.pd_wallet_verify_container);
@@ -475,10 +473,12 @@ public class PDUIWalletRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
 
         Context context;
+        LinearLayout loggedInLinearLayout;
         LinearLayout profilesLinearLayout;
         LinearLayout messagesLinearLayout;
         TextView messagesTextView;
         TextView messagesBadgeTextView;
+        TextView versionTextView;
         LinearLayout noHistory;
 
 
@@ -492,6 +492,7 @@ public class PDUIWalletRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
             this.context = context;
 
+            loggedInLinearLayout = (LinearLayout)itemView.findViewById(R.id.pd_logged_in_view);
             profilesLinearLayout = (LinearLayout)itemView.findViewById(R.id.pd_connect_layout);
             profilesLinearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -516,6 +517,9 @@ public class PDUIWalletRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
             profileName = (TextView)itemView.findViewById(R.id.pd_feed_user_name_text_view);
             ambassadorView = (PDAmbassadorView)itemView.findViewById(R.id.pd_profile_ambassador_view);
             noHistory =(LinearLayout)itemView.findViewById(R.id.pd_wallet_no_items_view);
+            versionTextView =(TextView) itemView.findViewById(R.id.version_text);
+            versionTextView.setText("V"+BuildConfig.VERSION_NAME);
+            versionTextView.setVisibility(View.GONE);
 
         }
     }
