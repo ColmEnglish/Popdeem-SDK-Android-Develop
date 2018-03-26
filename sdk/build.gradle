@@ -1,8 +1,7 @@
 apply plugin: 'com.android.library'
-apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
 
-project.ext.popdeemSdkVersion = '1.2.11'
+project.ext.popdeemSdkVersion = '1.2.12'
 
 android {
     compileSdkVersion 25
@@ -44,9 +43,9 @@ dependencies {
     // Facebook
     implementation 'com.facebook.android:facebook-android-sdk:4.5.0'
     // Twitter
-    implementation('com.twitter.sdk.android:twitter:2.0.0@aar') {
-        transitive = true
-    }
+    implementation 'com.twitter.sdk.android:twitter:3.1.1'
+
+
     // Third Party
     implementation 'joda-time:joda-time:2.9.4'
     implementation 'com.soundcloud.android:android-crop:1.0.1@aar'

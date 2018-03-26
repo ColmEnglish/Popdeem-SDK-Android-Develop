@@ -73,9 +73,16 @@ public class PDUIGratitudeDialog extends Dialog {
         }
 
 
-//        if(type.equalsIgnoreCase("share")) {
+        if(type.equalsIgnoreCase("logged_in")) {
+
+            ((TextView) dialog.findViewById(R.id.pd_gratitude_title)).setText(context.getString(R.string.pd_gratitude_thanks_for_connecting));
+            ((TextView) dialog.findViewById(R.id.pd_gratitude_description)).setText(String.format(context.getString(R.string.pd_gratitude_connect_body_text), ""+customerDetails.getIncrement_advocacy_points()));
+            if (mUser != null) {
+                ambassadorView.setLevel((int)mUser.getAdvocacyScore(), true);
+            }
+        }else{
             ((TextView) dialog.findViewById(R.id.pd_gratitude_title)).setText(context.getString(R.string.pd_gratitude_sweet_ribs_and_burgers));
-            ((TextView) dialog.findViewById(R.id.pd_gratitude_description)).setText(context.getString(R.string.pd_gratitude_share_body_text));
+            ((TextView) dialog.findViewById(R.id.pd_gratitude_description)).setText(String.format(context.getString(R.string.pd_gratitude_share_body_text), ""+customerDetails.getIncrement_advocacy_points()));
             if (mUser != null) {
                 ambassadorView.setLevel((int)mUser.getAdvocacyScore()+increment, ((int)mUser.getAdvocacyScore() < 90));
 
@@ -83,13 +90,7 @@ public class PDUIGratitudeDialog extends Dialog {
                 mUser.setAdvocacyScore(mUser.getAdvocacyScore()+increment);
                 mRealm.commitTransaction();
             }
-//        }else{
-//            ((TextView) dialog.findViewById(R.id.pd_gratitude_title)).setText(context.getString(R.string.pd_gratitude_thanks_for_connecting));
-//            ((TextView) dialog.findViewById(R.id.pd_gratitude_description)).setText(context.getString(R.string.pd_gratitude_connect_body_text));
-//            if (mUser != null) {
-//                ambassadorView.setLevel((int)mUser.getAdvocacyScore(), true);
-//            }
-//        }
+        }
 
 
 

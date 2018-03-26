@@ -23,11 +23,9 @@ import com.popdeem.sdk.core.model.PDReward;
 import com.popdeem.sdk.core.realm.PDRealmUserDetails;
 import com.popdeem.sdk.core.realm.PDRealmUserLocation;
 import com.popdeem.sdk.core.utils.PDSocialUtils;
-import com.popdeem.sdk.uikit.fragment.PDUIHomeFlowFragment;
+
 import com.popdeem.sdk.uikit.widget.PDUIBezelImageView;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.Picasso;
-import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterCore;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import io.realm.Realm;
@@ -198,10 +196,10 @@ public class PDUIScanActivity extends PDBaseActivity implements View.OnClickList
         if (pdbgScanResponseModel.getNetwork().equalsIgnoreCase(PD_SOCIAL_MEDIA_TYPE_FACEBOOK)){
             facebookAccessToken = AccessToken.getCurrentAccessToken().getToken();
         } else if (pdbgScanResponseModel.getNetwork().equalsIgnoreCase(PD_SOCIAL_MEDIA_TYPE_TWITTER)){
-            if (PDSocialUtils.isTwitterLoggedIn() && Twitter.getSessionManager().getActiveSession().getAuthToken().token != null
-                    && Twitter.getSessionManager().getActiveSession().getAuthToken().secret != null){
-                twitterAccessToken = Twitter.getSessionManager().getActiveSession().getAuthToken().token;
-                twitterAccessSecret = Twitter.getSessionManager().getActiveSession().getAuthToken().secret;
+            if (PDSocialUtils.isTwitterLoggedIn() && TwitterCore.getInstance().getSessionManager().getActiveSession().getAuthToken().token != null
+                    && TwitterCore.getInstance().getSessionManager().getActiveSession().getAuthToken().secret != null){
+                twitterAccessToken = TwitterCore.getInstance().getSessionManager().getActiveSession().getAuthToken().token;
+                twitterAccessSecret = TwitterCore.getInstance().getSessionManager().getActiveSession().getAuthToken().secret;
             }
         } else if (pdbgScanResponseModel.getNetwork().equalsIgnoreCase(PD_SOCIAL_MEDIA_TYPE_INSTAGRAM)){
             Realm realm1 = Realm.getDefaultInstance();

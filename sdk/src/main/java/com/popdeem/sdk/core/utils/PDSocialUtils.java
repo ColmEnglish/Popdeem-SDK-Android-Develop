@@ -40,10 +40,14 @@ import com.popdeem.sdk.core.api.PDAPICallback;
 import com.popdeem.sdk.core.api.PDAPIClient;
 import com.popdeem.sdk.core.realm.PDRealmInstagramConfig;
 import com.popdeem.sdk.core.realm.PDRealmUserDetails;
-import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.DefaultLogger;
+import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterConfig;
+import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 
 import org.json.JSONObject;
 
@@ -51,7 +55,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Set;
 
-import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 
 /**
@@ -329,16 +332,30 @@ public class PDSocialUtils {
     //------------------------------------------------------------------------
 
     public static void initTwitter(Context context) {
-        Twitter twitterKit = getTwitterKitForFabric(context);
-        if (twitterKit != null) {
-            Fabric.with(context, twitterKit);
+//        Twitter twitterKit = getTwitterKitForFabric(context);
+//        if (twitterKit != null) {
+//            Fabric.with(context, twitterKit);
+//        }
+        TwitterConfig twitterConfig = getTwitterKitForFabric(context);
+        if(twitterConfig!=null){
+            Twitter.initialize(twitterConfig);
         }
     }
 
-    public static Twitter getTwitterKitForFabric(Context context) {
+    public static TwitterConfig getTwitterKitForFabric(Context context) {
+
+
+
         TwitterAuthConfig twitterAuthConfig = getTwitterAuthConfig(context);
         if (twitterAuthConfig != null) {
-            return new Twitter(twitterAuthConfig);
+
+            TwitterConfig twitterConfig = new TwitterConfig.Builder(context)
+                    .logger(new DefaultLogger(Log.DEBUG))
+                    .twitterAuthConfig(twitterAuthConfig)
+                    .debug(true)
+                    .build();
+
+            return twitterConfig;
         }
         return null;
     }
@@ -363,14 +380,16 @@ public class PDSocialUtils {
     }
 
     public static void loginWithTwitter(Activity activity, Callback<TwitterSession> callback) {
-        if (isFabricInitialisedWithTwitter()) {
+        if (isTwitterInitialised()) {
             Log.i("PDSocialUtils", "loginWithTwitter: Fabric is initialized with Twitter");
-            Twitter.logIn(activity, callback);
+//            Twitter.getInstance().logIn(activity, callback);
+            TwitterAuthClient client = new TwitterAuthClient();
+            client.authorize(activity, callback);
         }
     }
 
     public static boolean isTwitterLoggedIn() {
-        return isFabricInitialisedWithTwitter() && Twitter.getSessionManager().getActiveSession() != null && Twitter.getSessionManager().getActiveSession().getAuthToken() != null;
+        return isTwitterInitialised() && TwitterCore.getInstance().getSessionManager().getActiveSession() != null && TwitterCore.getInstance().getSessionManager().getActiveSession().getAuthToken() != null;
     }
 
     public static boolean userHasTwitterCredentials() {
@@ -411,16 +430,27 @@ public class PDSocialUtils {
         return PDUtils.getStringFromMetaData(context, TWITTER_CONSUMER_SECRET_META_KEY);
     }
 
-    private static boolean isFabricInitialisedWithTwitter() {
-        if (!Fabric.isInitialized()) {
-            PDLog.e(PDSocialUtils.class, "Fabric is not initialised");
-            return false;
+    private static boolean isTwitterInitialised() {
+//        if (!Twitter.isInitialized()) {
+//            PDLog.e(PDSocialUtils.class, "Fabric is not initialised");
+//            return false;
+//        }
+//        if (Fabric.getKit(Twitter.class) == null) {
+//            PDLog.e(PDSocialUtils.class, "Twitter is not initialised with Fabric");
+//            return false;
+//        }
+
+        try{
+            if(TwitterCore.getInstance()!=null) {
+                return true;
+            }
+        }catch (IllegalStateException e){
+            PDLog.e(PDSocialUtils.class, "Twitter is not initialised");
         }
-        if (Fabric.getKit(Twitter.class) == null) {
-            PDLog.e(PDSocialUtils.class, "Twitter is not initialised with Fabric");
-            return false;
-        }
-        return true;
+//        if(TwitterCore.getInstance()==null){
+//            return false;
+//        }
+        return false;
     }
 
 
@@ -431,7 +461,12 @@ public class PDSocialUtils {
      * @return true if to be shown, false otherwise
      */
     public static boolean shouldShowSocialLogin(Context context) {
-        return !((PDSocialUtils.isLoggedInToFacebook() || PDSocialUtils.isInstagramLoggedIn() || isTwitterLoggedIn()) && PDUtils.getUserToken() != null) && PDPreferencesUtils.getLoginUsesCount(context) < PDPreferencesUtils.getNumberOfLoginAttempts(context);
+
+        boolean isFacebokLoggedIn = PDSocialUtils.isLoggedInToFacebook();
+        boolean isTwitterLoggedIn = PDSocialUtils.isTwitterLoggedIn();
+        boolean isInstagramLoggedIn = PDSocialUtils.isInstagramLoggedIn();
+        String token = PDUtils.getUserToken();
+        return !((isFacebokLoggedIn || isInstagramLoggedIn || isTwitterLoggedIn) && token != null) && PDPreferencesUtils.getLoginUsesCount(context) < PDPreferencesUtils.getNumberOfLoginAttempts(context);
     }
 
 }

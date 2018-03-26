@@ -106,10 +106,11 @@ import com.popdeem.sdk.uikit.utils.PDUIUtils;
 import com.popdeem.sdk.uikit.widget.PDUIBezelImageView;
 import com.soundcloud.android.crop.Crop;
 import com.squareup.picasso.Picasso;
-import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
@@ -199,6 +200,7 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
 
         addClickListenersToViews();
         updateEnabledStateOfViews();
+
 
         verifyView = (RelativeLayout) findViewById(R.id.pd_claim_progress_view);
         dotProgress = (DilatingDotsProgressBar) findViewById(R.id.dots_progress);
@@ -449,12 +451,21 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
     }
 
     private void updateEnabledStateOfViews() {
+        if(PDSocialUtils.isLoggedInToFacebook() && mFacebookSwitch.isChecked()) {
+            findViewById(R.id.pd_claim_tag_friends_button).setVisibility(View.VISIBLE);
+        }else{
+            findViewById(R.id.pd_claim_tag_friends_button).setVisibility(View.GONE);
+        }
         mFacebookSwitch.setEnabled(mIsHere && isNetworkAvailableForShare(PDReward.PD_SOCIAL_MEDIA_TYPE_FACEBOOK));
         mTwitterSwitch.setEnabled(mIsHere && isNetworkAvailableForShare(PDReward.PD_SOCIAL_MEDIA_TYPE_TWITTER));
         mInstagramSwitch.setEnabled(mIsHere && isNetworkAvailableForShare(PDReward.PD_SOCIAL_MEDIA_TYPE_INSTAGRAM));
         findViewById(R.id.pd_claim_add_image_button).setEnabled(mIsHere);
         findViewById(R.id.pd_claim_share_button).setEnabled(mIsHere);
         findViewById(R.id.pd_claim_tag_friends_button).setEnabled(mIsHere);
+        Realm realm = Realm.getDefaultInstance();
+        PDRealmUserDetails userDetails = realm.where(PDRealmUserDetails.class).findFirst();
+        realm.close();
+
         mMessageEditText.setEnabled(mIsHere);
     }
 
@@ -735,10 +746,10 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
 
         String twitterToken = null;
         String twitterSecret = null;
-        if (mTwitterSwitch.isChecked() && PDSocialUtils.isTwitterLoggedIn() && Twitter.getSessionManager().getActiveSession().getAuthToken().token != null
-                && Twitter.getSessionManager().getActiveSession().getAuthToken().secret != null) {
-            twitterToken = Twitter.getSessionManager().getActiveSession().getAuthToken().token;
-            twitterSecret = Twitter.getSessionManager().getActiveSession().getAuthToken().secret;
+        if (mTwitterSwitch.isChecked() && PDSocialUtils.isTwitterLoggedIn() && TwitterCore.getInstance().getSessionManager().getActiveSession().getAuthToken().token != null
+                && TwitterCore.getInstance().getSessionManager().getActiveSession().getAuthToken().secret != null) {
+            twitterToken = TwitterCore.getInstance().getSessionManager().getActiveSession().getAuthToken().token;
+            twitterSecret = TwitterCore.getInstance().getSessionManager().getActiveSession().getAuthToken().secret;
         }
 
         Realm realm = Realm.getDefaultInstance();
@@ -899,7 +910,7 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
                 Realm realm = Realm.getDefaultInstance();
                 PDRealmUserDetails userDetails = realm.where(PDRealmUserDetails.class).findFirst();
                 realm.close();
-                showInstagramFailure(userDetails, null);
+                showInstagramFailure(userDetails, mReward.getGlobalHashtag());
                 dotProgress.hide(150);
 
 
@@ -1004,18 +1015,18 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
 
 
             }else{
-                showInstagramFailure(userDetails, postScan);
+                showInstagramFailure(userDetails, mReward.getGlobalHashtag());
             }
 
         } else {
-            showInstagramFailure(userDetails, null);
+            showInstagramFailure(userDetails, mReward.getGlobalHashtag());
         }
         dotProgress.hide(150);
         mReward.setVerifying(false);
         realm.close();
     }
 
-    private void showInstagramFailure(PDRealmUserDetails userDetails, PDPostScan postScan) {
+    private void showInstagramFailure(PDRealmUserDetails userDetails, String hashtag) {
         pdVerifyHeadingText.setVisibility(View.VISIBLE);
         pdBackButton.setVisibility(View.VISIBLE);
 
@@ -1033,8 +1044,8 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
             headingText = headingText.replace(" XXXX", "");
         }
 
-        if (postScan != null && postScan.getText() != null && postScan.getText().length() > 0) {
-            headingText = headingText.replace("the #hashtag", postScan.getText());
+        if (hashtag != null && hashtag.length() > 0) {
+            headingText = headingText.replace("the #hashtag", ""+hashtag);
         }
 
         pdVerifyHeadingText.setText(headingText);
@@ -1090,6 +1101,24 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
                         .add(PDAbraConfig.ABRA_PROPERTYNAME_SOURCE_PAGE, PDAbraConfig.ABRA_PROPERTYVALUE_PAGE_VIEWED_CLAIM)
                         .create());
                 mInstagramSwitch.setChecked(true);
+            }
+        });
+        mFragmentManager.beginTransaction()
+                .add(android.R.id.content, fragment, PDUIConnectSocialAccountFragment.getName())
+                .addToBackStack(PDUIConnectSocialAccountFragment.getName())
+                .commit();
+    }
+
+    private void showConnectToTwitterFragment() {
+        uncheckSwitchIfChecked(mTwitterSwitch);
+        PDUIConnectSocialAccountFragment fragment = PDUIConnectSocialAccountFragment.newInstance(PDUIConnectSocialAccountFragment.PD_CONNECT_TYPE_TWITTER, new PDUIConnectSocialAccountFragment.PDUIConnectSocialAccountCallback() {
+            @Override
+            public void onAccountConnected(@PDUIConnectSocialAccountFragment.PDConnectSocialAccountType int type) {
+                PDAbraLogEvent.log(PDAbraConfig.ABRA_EVENT_CONNECTED_ACCOUNT, new PDAbraProperties.Builder()
+                        .add(PDAbraConfig.ABRA_PROPERTYNAME_SOCIAL_NETWORK, PDAbraConfig.ABRA_PROPERTYVALUE_SOCIAL_NETWORK_TWITTER)
+                        .add(PDAbraConfig.ABRA_PROPERTYNAME_SOURCE_PAGE, PDAbraConfig.ABRA_PROPERTYVALUE_PAGE_VIEWED_CLAIM)
+                        .create());
+                mTwitterSwitch.setChecked(true);
             }
         });
         mFragmentManager.beginTransaction()
@@ -1312,6 +1341,9 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
             if (isChecked) {
                 uncheckSwitchIfChecked(mFacebookSwitch);
                 uncheckSwitchIfChecked(mInstagramSwitch);
+                if(!PDSocialUtils.isTwitterLoggedIn()){
+                    showConnectToTwitterFragment();
+                }
             }
             toggleTwitterViews();
         } else if (id == R.id.pd_claim_instagram_switch) {

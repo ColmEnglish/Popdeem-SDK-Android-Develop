@@ -208,6 +208,8 @@ public class PDUISocialMultiLoginFragment extends Fragment implements View.OnCli
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                mProgressFacebook.setVisibility(View.VISIBLE);
+                progressView.setVisibility(View.VISIBLE);
                 mFacebookLoginButton.setText(R.string.pd_log_out_facebook_text);
                 PDLog.d(PDUISocialMultiLoginFragment.class, "Facebook Login onSuccess(): " + loginResult.getAccessToken().getToken());
                 checkForLocationPermissionAndStartLocationManager();
@@ -371,7 +373,10 @@ public class PDUISocialMultiLoginFragment extends Fragment implements View.OnCli
      * Facebook
      */
     private void loginFacebook() {
+
         if (PDLocationManager.isGpsEnabled(getActivity())) {
+            mProgressFacebook.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
             LoginManager.getInstance().logInWithReadPermissions(PDUISocialMultiLoginFragment.this, Arrays.asList(PDSocialUtils.FACEBOOK_READ_PERMISSIONS));
         } else {
             new AlertDialog.Builder(getActivity())

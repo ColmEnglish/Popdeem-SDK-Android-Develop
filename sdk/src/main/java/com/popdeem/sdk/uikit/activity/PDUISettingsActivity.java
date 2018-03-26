@@ -54,11 +54,9 @@ import com.popdeem.sdk.core.api.PDAPIClient;
 import com.popdeem.sdk.core.api.abra.PDAbraConfig;
 import com.popdeem.sdk.core.api.abra.PDAbraLogEvent;
 import com.popdeem.sdk.core.api.abra.PDAbraProperties;
-import com.popdeem.sdk.core.location.PDLocationManager;
 import com.popdeem.sdk.core.model.PDReward;
 import com.popdeem.sdk.core.model.PDUser;
 import com.popdeem.sdk.core.realm.PDRealmUserDetails;
-import com.popdeem.sdk.core.realm.PDRealmUserFacebook;
 import com.popdeem.sdk.core.realm.PDRealmUserInstagram;
 import com.popdeem.sdk.core.realm.PDRealmUserTwitter;
 import com.popdeem.sdk.core.utils.PDLog;
@@ -67,10 +65,10 @@ import com.popdeem.sdk.core.utils.PDUtils;
 import com.popdeem.sdk.uikit.adapter.PDUISettingsRecyclerViewAdapter;
 import com.popdeem.sdk.uikit.fragment.PDUIConnectSocialAccountFragment;
 import com.popdeem.sdk.uikit.widget.PDUIBezelImageView;
-import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
-import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -257,8 +255,8 @@ public class PDUISettingsActivity extends PDBaseActivity implements PDUISettings
             @Override
             public void success(PDUser user) {
                 PDUtils.updateSavedUser(user);
-                Twitter.getSessionManager().clearActiveSession();
-                Twitter.logOut();
+                TwitterCore.getInstance().getSessionManager().clearActiveSession();
+//                Twitter.logOut();
                 Toast.makeText(PDUISettingsActivity.this, "Twitter disconnected.", Toast.LENGTH_SHORT).show();
                 abraLog(PDAbraConfig.ABRA_EVENT_DISCONNECT_SOCIAL_ACCOUNT, PDAbraConfig.ABRA_PROPERTYVALUE_SOCIAL_NETWORK_TWITTER);
             }
