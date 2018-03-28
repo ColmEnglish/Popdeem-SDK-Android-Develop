@@ -41,6 +41,7 @@ import com.facebook.login.LoginManager;
 import com.popdeem.sdk.R;
 import com.popdeem.sdk.core.api.PDAPICallback;
 import com.popdeem.sdk.core.api.PDAPIClient;
+import com.popdeem.sdk.core.api.PDAPIConfig;
 import com.popdeem.sdk.core.api.response.PDBasicResponse;
 import com.popdeem.sdk.core.exception.PopdeemSDKNotInitializedException;
 import com.popdeem.sdk.core.gcm.GCMIntentService;
@@ -76,6 +77,8 @@ import bolts.AppLinks;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import static com.popdeem.sdk.core.api.PDAPIConfig.PD_PROD_API_ENDPOINT;
+
 /**
  * Created by mikenolan on 15/02/16.
  */
@@ -89,12 +92,26 @@ public final class PopdeemSDK {
     private PopdeemSDK() {
     }
 
+
     /**
      * Initialize Popdeem SDK
      *
      * @param application Application context
+     *
      */
     public static void initializeSDK(@NonNull Application application) {
+        initializeSDK(application, PD_PROD_API_ENDPOINT);
+    }
+
+    /**
+     * Initialize Popdeem SDK
+     *
+     * @param application Application context
+     * @param enviroment Popdeem enviroment PD_PROD_API_ENDPOINT, PD_STAGING_API_ENDPOINT
+     *
+     */
+    public static void initializeSDK(@NonNull Application application, String enviroment) {
+        PDAPIConfig.PD_API_ENDPOINT = enviroment;
         sApplication = application;
 
         // Register Activity Lifecycle Callbacks
