@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.view.View;
@@ -18,7 +17,6 @@ import com.popdeem.sdk.R;
 import com.popdeem.sdk.core.model.PDReward;
 import com.popdeem.sdk.core.realm.PDRealmCustomer;
 import com.popdeem.sdk.core.realm.PDRealmUserDetails;
-import com.popdeem.sdk.uikit.fragment.PDUIHomeFlowFragment;
 import com.popdeem.sdk.uikit.widget.PDAmbassadorView;
 
 import io.realm.Realm;
@@ -81,7 +79,7 @@ public class PDUIGratitudeDialog extends Dialog {
                 ambassadorView.setLevel((int)mUser.getAdvocacyScore(), true);
             }
         }else{
-            ((TextView) dialog.findViewById(R.id.pd_gratitude_title)).setText(context.getString(R.string.pd_gratitude_sweet_ribs_and_burgers));
+            ((TextView) dialog.findViewById(R.id.pd_gratitude_title)).setText(context.getString(R.string.pd_gratitude_title));
             ((TextView) dialog.findViewById(R.id.pd_gratitude_description)).setText(String.format(context.getString(R.string.pd_gratitude_share_body_text), ""+customerDetails.getIncrement_advocacy_points()));
             if (mUser != null) {
                 ambassadorView.setLevel((int)mUser.getAdvocacyScore()+increment, ((int)mUser.getAdvocacyScore() < 90));

@@ -233,7 +233,7 @@
     <string name="pd_back_to_reward">Back to Reward</string>
     <string name="pd_gratitude_thanks_text"  formatted="false">Thanks for sharing. You earned an additional %s points to your account and moved up in status</string>
     <string name="pd_gratitude_thanks_for_connecting">Thanks for connecting!</string>
-    <string name="pd_gratitude_sweet_ribs_and_burgers">Sweet Ribs and Burgers!</string>
+    <string name="pd_gratitude_title">Sweet Ribs and Burgers!</string>
     <string name="pd_gratitude_unlock_offers_text">Unlock new rewards and VIP offers as you move up in status.</string>
     <string name="pd_gratitude_go_to_profile_button">Go to Profile</string>
 
