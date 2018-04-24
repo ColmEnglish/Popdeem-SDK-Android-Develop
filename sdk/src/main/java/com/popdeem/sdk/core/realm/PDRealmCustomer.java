@@ -43,8 +43,13 @@ public class PDRealmCustomer extends RealmObject {
         ret.setFb_app_id(jsonObject.get(FB_APP_ID).getAsString());
         ret.setFb_app_access_token(jsonObject.get(FB_APP_ACCESS_TOKEN).getAsString());
         ret.setFacebook_namespace(jsonObject.get(FACEBOOK_NAMESPACE).getAsString());
-        ret.setTwitter_consumer_key(jsonObject.get(TWITTER_CONSUMER_KEY).getAsString());
-        ret.setTwitter_consumer_secret(jsonObject.get(TWITTER_CONSUMER_SECRET).getAsString());
+        if(jsonObject.get(TWITTER_CONSUMER_KEY)==null || jsonObject.get(TWITTER_CONSUMER_SECRET)==null) {
+            ret.setTwitter_consumer_key(jsonObject.get(TWITTER_CONSUMER_KEY).getAsString());
+            ret.setTwitter_consumer_secret(jsonObject.get(TWITTER_CONSUMER_SECRET).getAsString());
+        }else{
+            ret.setTwitter_consumer_key("");
+            ret.setTwitter_consumer_secret("");
+        }
         ret.setTwitter_handle(jsonObject.get(TWITTER_HANDLE).getAsString());
         ret.setInstagram_client_id(jsonObject.get(INSTAGRAM_CLIENT_ID).getAsString());
         ret.setInstagram_client_secret(jsonObject.get(INSTAGRAM_CLIENT_SECRET).getAsString());
@@ -52,12 +57,12 @@ public class PDRealmCustomer extends RealmObject {
         if(jsonObject.get(INCREMENT_ADVOCACY_POINTS)!=null) {
             ret.setIncrement_advocacy_points(jsonObject.get(INCREMENT_ADVOCACY_POINTS).getAsInt());
         }else{
-            ret.setIncrement_advocacy_points(30);
+            ret.setIncrement_advocacy_points(-1);
         }
         if(jsonObject.get(INCREMENT_ADVOCACY_POINTS)!=null) {
             ret.setDecrement_advocacy_points(jsonObject.get(DECREMENT_ADVOCACY_POINTS).getAsInt());
         }else{
-            ret.setDecrement_advocacy_points(30);
+            ret.setDecrement_advocacy_points(-1);
         }
         
         return ret;
@@ -148,5 +153,12 @@ public class PDRealmCustomer extends RealmObject {
     }
     public int getDecrement_advocacy_points(){
         return this.decrement_advocacy_points;
+    }
+
+
+    public boolean usesAmbassadorFeatures(){
+        if(getIncrement_advocacy_points()>0)
+            return true;
+        return false;
     }
 }

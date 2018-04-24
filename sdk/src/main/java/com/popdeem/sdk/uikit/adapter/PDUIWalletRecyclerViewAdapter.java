@@ -46,6 +46,7 @@ import com.popdeem.sdk.R;
 import com.popdeem.sdk.core.model.PDEvent;
 import com.popdeem.sdk.core.model.PDReward;
 import com.popdeem.sdk.core.model.PDUser;
+import com.popdeem.sdk.core.realm.PDRealmCustomer;
 import com.popdeem.sdk.core.realm.PDRealmUserDetails;
 import com.popdeem.sdk.uikit.activity.PDUIInboxActivity;
 import com.popdeem.sdk.uikit.activity.PDUISettingsActivity;
@@ -77,6 +78,8 @@ public class PDUIWalletRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
 
     private int messagesCount = 0;
+    private PDRealmCustomer mCustomer;
+
     public interface OnItemClickListener {
         void onItemClick(View v);
 
@@ -288,6 +291,7 @@ public class PDUIWalletRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         if (mRealm == null) {
             mRealm = Realm.getDefaultInstance();
         }
+
         mUser = mRealm.where(PDRealmUserDetails.class).findFirst();
         if (mUser != null) {
             String profileUrl = "";
@@ -316,7 +320,12 @@ public class PDUIWalletRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 header.profileName.setText(mUser.getFirstName());
             }
 
-
+            mCustomer = mRealm.where(PDRealmCustomer.class).findFirst();
+            if(mCustomer!=null){
+                if(!mCustomer.usesAmbassadorFeatures()){
+                    header.ambassadorView.setVisibility(View.GONE);
+                }
+            }
             header.ambassadorView.setLevel((int)mUser.getAdvocacyScore(), false);
             header.loggedInLinearLayout.setVisibility(View.VISIBLE);
         }else{

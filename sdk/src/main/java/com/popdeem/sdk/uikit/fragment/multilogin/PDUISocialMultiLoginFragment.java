@@ -271,7 +271,7 @@ public class PDUISocialMultiLoginFragment extends Fragment implements View.OnCli
             mInstaLoginButton.setVisibility(View.VISIBLE);
             mFacebookLoginButton.setText(R.string.pd_log_in_with_facebook_text);
             mTwitterLoginButton.setText(R.string.pd_log_in_with_twitter_text);
-            mFacebookLoginButton.setText(R.string.pd_log_in_with_instagram_text);
+            mInstaLoginButton.setText(R.string.pd_log_in_with_instagram_text);
 
             new AlertDialog.Builder(getActivity())
                     .setTitle(R.string.pd_common_sorry_text)

@@ -232,8 +232,9 @@
     <string name="pd_claim_back_text">Back to Reward</string>
     <string name="pd_back_to_reward">Back to Reward</string>
     <string name="pd_gratitude_thanks_text"  formatted="false">Thanks for sharing. You earned an additional %s points to your account and moved up in status</string>
-    <string name="pd_gratitude_thanks_for_connecting">Thanks for connecting!</string>
-    <string name="pd_gratitude_title">Sweet Ribs and Burgers!</string>
+    <string name="pd_gratitude_thanks_for_connecting">Welcome</string>
+    <string name="pd_gratitude_title">You're Brilliant!</string>
+    <string name="pd_gratitude_share_text">Thanks for sharing, your reward has been added to your profile. Enjoy!</string>
     <string name="pd_gratitude_unlock_offers_text">Unlock new rewards and VIP offers as you move up in status.</string>
     <string name="pd_gratitude_go_to_profile_button">Go to Profile</string>
 
@@ -257,6 +258,24 @@
     <string name="pd_event_now_2">ambassador</string>
 
     <string name="content_authority">com.popdeem.sdk</string>
+
+
+
+    <string-array name="pd_gratuity_strings_login_title">
+    </string-array>
+
+
+    <string-array name="pd_gratuity_strings_login_body">
+
+    </string-array>
+
+
+    <string-array name="pd_gratuity_strings_share_title">
+    </string-array>
+
+    <string-array name="pd_gratuity_strings_share_body">
+    </string-array>
+
 
 
     <!--<string name="pd_redeem_at_stores_label">Redeem at participating stores.</string>-->

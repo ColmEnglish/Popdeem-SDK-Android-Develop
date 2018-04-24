@@ -26,8 +26,10 @@ package com.popdeem.sdk.core;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -67,6 +69,7 @@ import com.popdeem.sdk.core.utils.PDUtils;
 import com.popdeem.sdk.uikit.activity.PDUIHomeFlowActivity;
 import com.popdeem.sdk.uikit.fragment.PDUIRewardsFragment;
 import com.popdeem.sdk.uikit.fragment.PDUISocialLoginFragment;
+import com.popdeem.sdk.uikit.fragment.dialog.PDUIGratitudeDialog;
 import com.popdeem.sdk.uikit.fragment.dialog.PDUINotificationDialogFragment;
 import com.popdeem.sdk.uikit.fragment.multilogin.PDUISocialMultiLoginFragment;
 
@@ -78,6 +81,7 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 import static com.popdeem.sdk.core.api.PDAPIConfig.PD_PROD_API_ENDPOINT;
+import static com.popdeem.sdk.uikit.fragment.PDUIRewardsFragment.PD_LOGGED_IN_RECEIVER_FILTER;
 
 /**
  * Created by mikenolan on 15/02/16.
@@ -103,6 +107,15 @@ public final class PopdeemSDK {
         initializeSDK(application, PD_PROD_API_ENDPOINT);
     }
 
+    private static final BroadcastReceiver mLoggedInBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            PDLog.i(PDUIRewardsFragment.class, "LoggedIn broadcast onReceive");
+            PopdeemSDK.handleHomeFlow(context);
+//            PDUIGratitudeDialog.showGratitudeDialog(context, "logged_in");
+
+        }
+    };
     /**
      * Initialize Popdeem SDK
      *
@@ -111,6 +124,9 @@ public final class PopdeemSDK {
      *
      */
     public static void initializeSDK(@NonNull Application application, String enviroment) {
+
+        application.registerReceiver(mLoggedInBroadcastReceiver , new IntentFilter(PD_LOGGED_IN_RECEIVER_FILTER));
+
         PDAPIConfig.PD_API_ENDPOINT = enviroment;
         sApplication = application;
 
@@ -572,7 +588,7 @@ public final class PopdeemSDK {
         realm.close();
 
         // Broadcast to update rewards / wallet / etc
-        context.sendBroadcast(new Intent(PDUIRewardsFragment.PD_LOGGED_IN_RECEIVER_FILTER));
+        context.sendBroadcast(new Intent(PD_LOGGED_IN_RECEIVER_FILTER));
     }
 
 

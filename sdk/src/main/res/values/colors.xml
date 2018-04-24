@@ -79,7 +79,7 @@
 
     <!-- Wallet List Item Colors -->
     <color name="pd_wallet_background_color">#ffffff</color>
-    <color name="pd_wallet_no_rewards_text_color">#000000</color>
+    <color name="pd_wallet_no_rewards_text_color">#000000</color>efgegefgers
     <color name="pd_wallet_item_background_color">#ffffff</color>
     <color name="pd_wallet_list_divider_color">#C0C0C0</color>
     <color name="pd_wallet_item_default_text_color">#000000</color>
@@ -95,6 +95,14 @@
     <color name="pd_redeem_timer_text_colour">@color/pd_toolbar_color</color>
     <color name="pd_redeem_title_text_colour">#000000</color>
     <color name="pd_redeem_description_text_colour">#000000</color>
+
+    <!-- Cop Image Colors -->
+    <color name="pd_crop_toolbar_colour">@color/pd_toolbar_color</color>
+    <color name="pd_crop_status_bar_colour">@color/pd_toolbar_color_dark</color>
+    <color name="pd_crop_content_background_colour">#ffffff</color>
+    <color name="pd_crop_active_widget_colour">@color/pd_accent</color>
+    <color name="pd_crop_toolbar_widget_colour">@color/pd_back_button_color</color>
+
 
 
     <!-- Claim Colors -->

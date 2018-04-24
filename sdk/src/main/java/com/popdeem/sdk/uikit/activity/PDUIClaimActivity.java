@@ -25,6 +25,8 @@
 package com.popdeem.sdk.uikit.activity;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -51,9 +53,11 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -114,6 +118,7 @@ import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+import com.yalantis.ucrop.UCrop;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import java.io.ByteArrayOutputStream;
@@ -278,7 +283,7 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
             @Override
             public void run() {
                 mIsHere = PDLocationValidator.validateLocationForReward(mReward, location);
-//                mIsHere = true; // TODO: Remove for release
+                mIsHere = true; // TODO: Remove for release
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -867,7 +872,6 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
 
     private void finishActivityAfterClaim() {
         verifyReward();
-
     }
 
 
@@ -1161,6 +1165,27 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
         updateTwitterCharsLeft();
         mImageView.setImageBitmap(PDUIImageUtils.getResizedBitmap(path, targetH, targetW, orientation));
         mImageView.setVisibility(View.VISIBLE);
+        mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(PDUIClaimActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    new AlertDialog.Builder(PDUIClaimActivity.this)
+                            .setTitle(getString(R.string.pd_storage_permissions_title_string))
+                            .setMessage(getString(R.string.pd_storage_permission_rationale_string))
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ActivityCompat.requestPermissions(PDUIClaimActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 123);
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, null)
+                            .create()
+                            .show();
+                } else {
+                    showAddPictureChoiceDialog();
+                }
+            }
+        });
     }
 
     private void startCameraIntentWithImagePath() {
@@ -1226,7 +1251,17 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
 
     private void showCropView(Uri source) throws IOException {
         Uri croppedImageDestination = Uri.fromFile(setUpCroppedPhotoFile());
-        Crop.of(source, croppedImageDestination).start(this);
+        //Crop.of(source, croppedImageDestination).start(this);
+        UCrop.Options options = new UCrop.Options();
+        options.setCompressionFormat(Bitmap.CompressFormat.PNG);
+        options.setToolbarColor(ContextCompat.getColor(this, R.color.pd_crop_toolbar_colour));
+        options.setStatusBarColor(ContextCompat.getColor(this, R.color.pd_crop_status_bar_colour));
+        options.setActiveWidgetColor(ContextCompat.getColor(this, R.color.pd_crop_active_widget_colour));
+        options.setToolbarWidgetColor(ContextCompat.getColor(this, R.color.pd_crop_toolbar_widget_colour));
+        options.setRootViewBackgroundColor(ContextCompat.getColor(this, R.color.pd_crop_content_background_colour));
+
+        UCrop.of(source, croppedImageDestination).withOptions(options).start(this);
+
     }
 
 
@@ -1469,17 +1504,18 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
             }
         } else if (ID == R.id.pd_claim_already_shared_button) {
 
-            if(true){
-                //TODO: remove for release
-                finishActivityAfterClaim();
-                return;
-            }
+//            if(true){
+//                //TODO: remove for release
+//                finishActivityAfterClaim();
+//                return;
+//            }
 
             Log.i("Claim Activity", mReward.getGlobalHashtag());
             if (!mIsHere) {
                 showBasicOKAlertDialog(R.string.pd_claim_verify_location_failed_title_text, R.string.pd_claim_verify_location_failed_text);
                 return;
             }
+
             Intent intent = new Intent(this, PDUISelectNetworkActivity.class);
             intent.putExtra("reward", new Gson().toJson(mReward, PDReward.class));
             startActivity(intent);
@@ -1565,7 +1601,7 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
             } else {
                 // Error picking image
             }
-        } else if (requestCode == Crop.REQUEST_CROP && resultCode == RESULT_OK) {
+        } else if (requestCode == UCrop.REQUEST_CROP && resultCode == RESULT_OK) {
 //            PDLog.d(PDUIImageUtils.class, "handle cropped image");
             handleCroppedPhoto();
         } else if (requestCode == TwitterAuthConfig.DEFAULT_AUTH_REQUEST_CODE) {
@@ -1602,6 +1638,32 @@ public class PDUIClaimActivity extends PDBaseActivity implements View.OnClickLis
             } else {
                 super.onBackPressed();
             }
+        }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        View v = getCurrentFocus();
+
+        if (v != null &&
+                (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_MOVE) &&
+                v instanceof EditText &&
+                !v.getClass().getName().startsWith("android.webkit.")) {
+            int scrcoords[] = new int[2];
+            v.getLocationOnScreen(scrcoords);
+            float x = ev.getRawX() + v.getLeft() - scrcoords[0];
+            float y = ev.getRawY() + v.getTop() - scrcoords[1];
+
+            if (x < v.getLeft() || x > v.getRight() || y < v.getTop() || y > v.getBottom())
+                hideKeyboard(this);
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        if (activity != null && activity.getWindow() != null && activity.getWindow().getDecorView() != null) {
+            InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
         }
     }
 }
